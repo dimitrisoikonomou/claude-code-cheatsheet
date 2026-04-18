@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 2.1.98 — Cheatsheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e10;
+    --bg-raised: #151518;
+    --bg-sunk: #0a0a0c;
+    --border: #26262b;
+    --border-strong: #3a3a42;
+    --text: #ededea;
+    --text-dim: #a8a6a0;
+    --text-faint: #6a6862;
+    --accent: #d97757;            /* Anthropic-ish clay */
+    --accent-soft: #3a2419;
+    --accent-bright: #e88a68;
+    --key: #f0c07a;               /* warm highlight for keys */
+    --cmd: #8fb8a8;               /* muted sage for commands */
+    --string: #c9a876;
+    --warn: #d97757;
+    --danger: #c85a4e;
+    --good: #6a9a7b;
+    --purple: #a896c9;
+    --link: #b7d4c4;              /* legible sage-blue for inline links */
+
+    /* Typography scale */
+    --body: 15px;
+    --small: 13.5px;
+    --tiny: 12px;
+    --code: 13.5px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: var(--body);
+    line-height: 1.65;
+    padding: 0;
+    background-image:
+      radial-gradient(ellipse at top left, rgba(217,119,87,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(168,150,201,0.03) 0%, transparent 50%);
+    background-attachment: fixed;
+    /* Reserve space for the fixed banner */
+    padding-top: 148px;
+  }
+  .wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 32px 120px;
+  }
+
+  /* ===== Fixed Header ===== */
+  header.banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(14, 14, 16, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .banner-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 26px 32px 22px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+  }
+  .title-link {
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .title-link:hover { opacity: 0.85; }
+  .title-block h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 56px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .title-block h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--tiny);
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+  .tagline span { color: var(--text); }
+  .meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--tiny);
+    color: var(--text-dim);
+    line-height: 1.9;
+  }
+  .meta .ver {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 3px 10px;
+    border: 1px solid var(--accent);
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .meta code { color: var(--key); }
+
+  /* ===== TOC ===== */
+  nav.toc {
+    border: 1px solid var(--border);
+    background: var(--bg-raised);
+    padding: 22px 26px;
+    margin-bottom: 56px;
+  }
+  nav.toc h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  nav.toc ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 6px 24px;
+  }
+  nav.toc a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: var(--small);
+    display: flex;
+    gap: 10px;
+    padding: 4px 0;
+    transition: color 0.15s;
+  }
+  nav.toc a:hover { color: var(--accent); }
+  nav.toc a .num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-faint);
+    font-size: 11px;
+    min-width: 22px;
+  }
+
+  /* ===== Sections ===== */
+  section {
+    margin-bottom: 80px;
+    scroll-margin-top: 160px; /* account for fixed banner */
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 30px;
+  }
+  .section-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--text-faint);
+    font-style: italic;
+  }
+  .section-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .section-head .sub {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--tiny);
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+    margin-top: 4px;
+    font-style: normal;
+  }
+
+  /* Subheadings */
+  h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border);
+  }
+  h3:first-child { margin-top: 0; }
+
+  h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 22px 0 10px;
+    letter-spacing: 0.005em;
+  }
+
+  /* Prose */
+  p {
+    margin-bottom: 14px;
+    color: var(--text);
+    max-width: 80ch;
+  }
+  p.lede {
+    color: var(--text-dim);
+    font-size: var(--body);
+    line-height: 1.7;
+  }
+
+  /* Inline links — subtle but legible */
+  a.ref {
+    color: var(--link);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(183,212,196,0.4);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  a.ref:hover {
+    color: var(--accent-bright);
+    border-bottom-color: var(--accent-bright);
+  }
+  a.ref::after {
+    content: ' ↗';
+    font-size: 0.85em;
+    color: var(--text-faint);
+  }
+
+  /* Doc links block at end of section */
+  .docs-links {
+    margin-top: 28px;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    background: var(--bg-raised);
+    font-size: var(--small);
+  }
+  .docs-links-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+  }
+  .docs-links ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+  }
+  .docs-links li { margin: 0; padding: 0; }
+  .docs-links li::before { display: none; }
+
+  /* Code */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--code);
+  }
+  p code, li code, td code {
+    background: var(--bg-sunk);
+    color: var(--key);
+    padding: 1px 6px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 12.5px;
+  }
+  pre {
+    background: var(--bg-sunk);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    padding: 16px 20px;
+    margin: 12px 0 22px;
+    overflow-x: auto;
+    font-size: var(--code);
+    line-height: 1.7;
+    position: relative;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text);
+    font-size: var(--code);
+  }
+  pre .c { color: var(--text-faint); font-style: italic; }
+  pre .k { color: var(--accent); }
+  pre .v { color: var(--key); }
+  pre .s { color: var(--cmd); }
+  pre .f { color: var(--purple); }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 24px;
+    font-size: var(--small);
+  }
+  th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--text-faint);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 10px 14px 10px 0;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  td {
+    padding: 10px 14px 10px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--key);
+    font-weight: 500;
+    white-space: nowrap;
+    padding-right: 24px;
+    font-size: 12.5px;
+  }
+  tr:last-child td { border-bottom: none; }
+  table.wide td:first-child { white-space: normal; }
+
+  /* Lists */
+  ul, ol {
+    padding-left: 22px;
+    margin-bottom: 16px;
+  }
+  li {
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+  li::marker { color: var(--text-faint); }
+  ul.plain { list-style: none; padding-left: 0; }
+  ul.plain li {
+    padding-left: 18px;
+    position: relative;
+  }
+  ul.plain li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 900px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .banner-inner { grid-template-columns: 1fr; }
+    .meta { text-align: left; }
+    body { padding-top: 180px; }
+    section { scroll-margin-top: 200px; }
+    .title-block h1 { font-size: 42px; }
+  }
+
+  /* Callouts */
+  .note {
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--key);
+    padding: 14px 18px;
+    margin: 16px 0;
+    background: rgba(240, 192, 122, 0.03);
+    font-size: var(--small);
+    line-height: 1.65;
+  }
+  .note.warn { border-left-color: var(--warn); background: rgba(217, 119, 87, 0.04); }
+  .note.danger { border-left-color: var(--danger); background: rgba(200, 90, 78, 0.04); }
+  .note.good { border-left-color: var(--good); background: rgba(106, 154, 123, 0.04); }
+  .note .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-right: 10px;
+    color: var(--key);
+  }
+  .note.warn .label { color: var(--warn); }
+  .note.danger .label { color: var(--danger); }
+  .note.good .label { color: var(--good); }
+  .note .label::after { content: '·'; margin-left: 10px; color: var(--text-faint); }
+
+  /* Keyboard */
+  kbd {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    color: var(--key);
+    background: var(--bg-sunk);
+    border: 1px solid var(--border-strong);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    margin: 0 1px;
+    line-height: 1.4;
+  }
+
+  /* Tag chips */
+  .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    color: var(--text-dim);
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .tag.new { color: var(--accent); border-color: var(--accent); }
+  .tag.beta { color: var(--purple); border-color: var(--purple); }
+  .tag.deprecated { color: var(--danger); border-color: var(--danger); text-decoration: line-through; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 28px;
+    margin-top: 64px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--tiny);
+    color: var(--text-faint);
+  }
+  footer a { color: var(--text-dim); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { height: 10px; width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-sunk); }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+  /* Top-of-page anchor target */
+  #top { scroll-margin-top: 0; }
+</style>
+</head>
+<body>
+
+<!-- Invisible top anchor so the title-link returns users above the TOC -->
+<span id="top" aria-hidden="true"></span>
+
+<!-- ===== Fixed Banner ===== -->
+<header class="banner">
+  <div class="banner-inner">
+    <a href="#top" class="title-link" aria-label="Back to top">
+      <div class="title-block">
+        <h1>Claude <em>Code</em></h1>
+        <div class="tagline">Agentic coding in the terminal · <span>v2.1.98 cheatsheet</span> · built for daily reference</div>
+      </div>
+    </a>
+    <div class="meta">
+      <div class="ver">v2.1.98</div><br>
+      Verify install: <code>claude --version</code><br>
+      Upgrade: <code>claude update</code>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===== TOC ===== -->
+<nav class="toc">
+  <h2>Contents</h2>
+  <ul>
+    <li><a href="#mental-model"><span class="num">01</span>Mental model</a></li>
+    <li><a href="#install"><span class="num">02</span>Install &amp; launch</a></li>
+    <li><a href="#cli"><span class="num">03</span>CLI flags</a></li>
+    <li><a href="#shortcuts"><span class="num">04</span>Keyboard shortcuts</a></li>
+    <li><a href="#slash"><span class="num">05</span>Slash commands</a></li>
+    <li><a href="#modes"><span class="num">06</span>Permission modes</a></li>
+    <li><a href="#models"><span class="num">07</span>Models &amp; effort</a></li>
+    <li><a href="#memory"><span class="num">08</span>Memory (CLAUDE.md)</a></li>
+    <li><a href="#skills"><span class="num">09</span>Skills &amp; commands</a></li>
+    <li><a href="#subagents"><span class="num">10</span>Subagents</a></li>
+    <li><a href="#hooks"><span class="num">11</span>Hooks</a></li>
+    <li><a href="#mcp"><span class="num">12</span>MCP servers</a></li>
+    <li><a href="#plugins"><span class="num">13</span>Plugins</a></li>
+    <li><a href="#background"><span class="num">14</span>Background &amp; worktrees</a></li>
+    <li><a href="#headless"><span class="num">15</span>Headless / SDK</a></li>
+    <li><a href="#config"><span class="num">16</span>Config &amp; settings</a></li>
+    <li><a href="#env"><span class="num">17</span>Env variables</a></li>
+    <li><a href="#workflows"><span class="num">18</span>Workflows</a></li>
+    <li><a href="#gotchas"><span class="num">19</span>Gotchas</a></li>
+  </ul>
+</nav>
+
+<!-- ============ 01 MENTAL MODEL ============ -->
+<section id="mental-model">
+  <div class="section-head">
+    <div class="section-num">01</div>
+    <h2>Mental model<span class="sub">how the pieces fit together</span></h2>
+  </div>
+
+  <p class="lede">Claude Code is an agentic CLI. You speak in natural language; it reads files, runs commands, edits code, and ships work. Everything else is configuration around that loop.</p>
+
+  <p>The <a class="ref" href="https://code.claude.com/docs/en/how-claude-code-works" target="_blank" rel="noopener">agentic loop</a> runs in three blended phases — <strong>gather context</strong>, <strong>take action</strong>, <strong>verify results</strong> — and uses built-in tools (<a class="ref" href="https://code.claude.com/docs/en/tools-reference" target="_blank" rel="noopener">Read, Edit, Write, Bash, Grep, Glob, WebFetch, Task</a>) to touch your project. Each tool call feeds the next decision. You extend this loop by adding knowledge, connections, or constraints — without ever changing the loop itself.</p>
+
+  <div class="grid-2">
+    <div>
+      <h4>The five extension points</h4>
+      <table>
+        <tr><td>CLAUDE.md</td><td>Project memory. Auto-loaded at session start.</td></tr>
+        <tr><td>Skills</td><td>Model-invoked capabilities. Claude picks them.</td></tr>
+        <tr><td>Slash commands</td><td>User-invoked prompts. You type <code>/name</code>.</td></tr>
+        <tr><td>Subagents</td><td>Isolated contexts for specialized tasks.</td></tr>
+        <tr><td>MCP servers</td><td>External tools (GitHub, Sentry, DBs, APIs).</td></tr>
+      </table>
+      <p>Every extension costs some context window. Skills load descriptions upfront and bodies on demand. Subagents cost zero main-context tokens because they run in isolation. Hooks cost nothing unless they return output. Choose accordingly — see <a class="ref" href="https://code.claude.com/docs/en/features-overview" target="_blank" rel="noopener">context costs per feature</a>.</p>
+    </div>
+    <div>
+      <h4>The three execution modes</h4>
+      <table>
+        <tr><td>Interactive</td><td>TUI conversation. <code>claude</code>.</td></tr>
+        <tr><td>Headless</td><td>One-shot or piped. <code>claude -p "…"</code>.</td></tr>
+        <tr><td>Remote</td><td>Claude Code on Web / mobile Remote Control.</td></tr>
+      </table>
+
+      <h4>Config resolution order <small style="color:var(--text-faint);font-weight:400">(first = highest priority)</small></h4>
+      <ol>
+        <li><code>/etc/claude-code/managed-settings.json</code> — enterprise policy</li>
+        <li><code>.claude/settings.local.json</code> — personal, git-ignored</li>
+        <li><code>.claude/settings.json</code> — project, checked in</li>
+        <li><code>~/.claude/settings.json</code> — user defaults</li>
+      </ol>
+      <p>Later layers never override earlier ones. A <code>deny</code> rule in project settings can't be loosened by a personal override.</p>
+    </div>
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/how-claude-code-works" target="_blank" rel="noopener">How Claude Code works</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/features-overview" target="_blank" rel="noopener">Extend Claude Code</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/claude-directory" target="_blank" rel="noopener">The .claude directory</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/context-window" target="_blank" rel="noopener">Context window explained</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Best practices</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 02 INSTALL ============ -->
+<section id="install">
+  <div class="section-head">
+    <div class="section-num">02</div>
+    <h2>Install &amp; launch<span class="sub">get up in under a minute</span></h2>
+  </div>
+
+  <p>Four supported installers. The native script is the only one that <strong>auto-updates in the background</strong>; Homebrew and winget need manual upgrades. The npm path still works but is deprecated — if you're new, don't start there.</p>
+
+  <div class="grid-2">
+    <div>
+      <h4>macOS / Linux — native installer (recommended)</h4>
+<pre><code><span class="c"># Official install script</span>
+curl -fsSL https://claude.ai/install.sh | bash
+
+<span class="c"># Homebrew</span>
+brew install --cask claude-code
+brew upgrade claude-code   <span class="c"># manual upgrade</span></code></pre>
+
+      <h4>Windows</h4>
+<pre><code><span class="c"># PowerShell</span>
+irm https://claude.ai/install.ps1 | iex
+
+<span class="c"># winget</span>
+winget install Anthropic.ClaudeCode
+winget upgrade Anthropic.ClaudeCode  <span class="c"># manual</span></code></pre>
+
+      <h4>IDE integration</h4>
+      <p>VS Code and JetBrains plugins exist — launch Claude from an IDE gutter, get inline diff proposals, and keep your terminal free. See <a class="ref" href="https://code.claude.com/docs/en/vs-code" target="_blank" rel="noopener">VS Code</a> and <a class="ref" href="https://code.claude.com/docs/en/jetbrains" target="_blank" rel="noopener">JetBrains</a> docs.</p>
+    </div>
+    <div>
+      <h4>Launch &amp; maintenance</h4>
+<pre><code><span class="c"># Start in the current project</span>
+cd your-project &amp;&amp; claude
+
+<span class="c"># Version / update / health</span>
+claude --version
+claude update
+claude doctor
+
+<span class="c"># Force reinstall if update misbehaves</span>
+claude install --force
+
+<span class="c"># Auth</span>
+claude   <span class="c"># prompts /login on first run</span></code></pre>
+
+      <div class="note warn">
+        <span class="label">Auth notes</span>
+        Pro plans limit Opus access — see <a class="ref" href="https://support.claude.com/en/articles/11940350-claude-code-model-configuration" target="_blank" rel="noopener">model configuration on support</a>. For API-key, Bedrock, Vertex, or Foundry use, set <code>ANTHROPIC_AUTH_TOKEN</code> or the provider's credentials before launch.
+      </div>
+
+      <div class="note">
+        <span class="label">Tip</span>
+        Run <code>claude doctor</code> after any config change — it flags unreachable permission rules, duplicate MCP servers, missing LSP binaries, and broken hooks.
+      </div>
+    </div>
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/quickstart" target="_blank" rel="noopener">Quickstart</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener">Overview</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Administration &amp; setup</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/terminal-config" target="_blank" rel="noopener">Terminal configuration</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/troubleshooting" target="_blank" rel="noopener">Troubleshooting</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 03 CLI ============ -->
+<section id="cli">
+  <div class="section-head">
+    <div class="section-num">03</div>
+    <h2>CLI flags<span class="sub">how you launch determines what you get</span></h2>
+  </div>
+
+  <p>Every flag is also available via config file or an env var. The CLI is the canonical source — the <a class="ref" href="https://code.claude.com/docs/en/cli-reference" target="_blank" rel="noopener">full CLI reference</a> lists everything including less-used diagnostic flags.</p>
+
+  <div class="grid-2">
+    <div>
+      <h4>Session control</h4>
+      <table>
+        <tr><td>-c, --continue</td><td>Resume most recent session in this dir</td></tr>
+        <tr><td>-r, --resume &lt;id&gt;</td><td>Resume a specific session id or <code>/rename</code> name</td></tr>
+        <tr><td>--fork-session</td><td>Branch from a resumed session, preserving the original</td></tr>
+        <tr><td>--from-pr &lt;#&gt;</td><td>Resume session linked to a PR</td></tr>
+        <tr><td>-w, --worktree &lt;name&gt;</td><td>Run in a named git worktree</td></tr>
+        <tr><td>--teleport</td><td>Move current session to another cwd</td></tr>
+        <tr><td>--rename / --name</td><td>Set human-readable session name</td></tr>
+        <tr><td>--add-dir &lt;path&gt;</td><td>Grant access to another directory</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>Model &amp; prompt</h4>
+      <table>
+        <tr><td>--model &lt;id&gt;</td><td>Override session model (alias or full name)</td></tr>
+        <tr><td>--effort &lt;level&gt;</td><td><code>low</code> · <code>medium</code> · <code>high</code></td></tr>
+        <tr><td>--append-system-prompt</td><td>Add to default system prompt <em>(safe)</em></td></tr>
+        <tr><td>--system-prompt[-file]</td><td>Replace default system prompt <em>(strict)</em></td></tr>
+        <tr><td>--agents '&lt;json&gt;'</td><td>Define subagents inline via JSON</td></tr>
+        <tr><td>--mcp-config &lt;file&gt;</td><td>Load MCP servers from a specific JSON file</td></tr>
+        <tr><td>--plugin-dir &lt;path&gt;</td><td>Load a local plugin for this session (dev mode)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h4>Headless / automation</h4>
+      <table>
+        <tr><td>-p, --print "q"</td><td>Non-interactive. Print result, exit.</td></tr>
+        <tr><td>--output-format</td><td><code>text</code> · <code>json</code> · <code>stream-json</code></td></tr>
+        <tr><td>--max-turns &lt;n&gt;</td><td>Cap agentic turns</td></tr>
+        <tr><td>--allowedTools "…"</td><td>Whitelist tools (comma-sep)</td></tr>
+        <tr><td>--disallowedTools "…"</td><td>Deny specific tools</td></tr>
+        <tr><td>--disable-slash-commands</td><td>Kill all <code>/cmd</code></td></tr>
+        <tr><td>--permission-mode &lt;m&gt;</td><td>Launch in <code>plan</code> / <code>acceptEdits</code> / <code>bypassPermissions</code></td></tr>
+        <tr><td>--setting-sources</td><td>Limit which settings files load</td></tr>
+        <tr><td>--verbose / --debug</td><td>Debug logging + MCP handshake logs</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>New or notable in 2.1.98</h4>
+      <table>
+        <tr><td>--exclude-dynamic-<br>system-prompt-sections</td><td><span class="tag new">NEW</span>Better cross-user prompt caching in print mode</td></tr>
+        <tr><td>--setting-sources</td><td>Restrict loaded settings to specific sources</td></tr>
+      </table>
+
+      <div class="note">
+        <span class="label">System prompt</span>
+        Prefer <code>--append-system-prompt</code>. <code>--system-prompt</code> strips Claude Code's defaults (tool-use framing, safety rails) — only use it when you need full control.
+      </div>
+
+      <div class="note">
+        <span class="label">Sessions &amp; forking</span>
+        <code>--continue</code> + <code>--fork-session</code> lets you explore a risky path without destroying the original transcript. Great for "try rewriting this with X, but let me go back if it breaks."
+      </div>
+    </div>
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/cli-reference" target="_blank" rel="noopener">CLI reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">Interactive mode</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/third-party-integrations" target="_blank" rel="noopener">Third-party integrations</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 04 SHORTCUTS ============ -->
+<section id="shortcuts">
+  <div class="section-head">
+    <div class="section-num">04</div>
+    <h2>Keyboard shortcuts<span class="sub">learned in an hour, saved forever</span></h2>
+  </div>
+
+  <p>Memorize <kbd>Esc</kbd>, <kbd>Esc Esc</kbd>, <kbd>Shift+Tab</kbd>, <kbd>Ctrl+B</kbd>, and <kbd>Alt/Option+P</kbd> before anything else. Full list in the <a class="ref" href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">interactive mode reference</a>.</p>
+
+  <div class="grid-2">
+    <div>
+      <h4>Prompt editing</h4>
+      <table>
+        <tr><td><kbd>!</kbd></td><td>Bash mode prefix (single command)</td></tr>
+        <tr><td><kbd>@</kbd></td><td>File / folder mention autocomplete</td></tr>
+        <tr><td><kbd>\</kbd>+<kbd>Enter</kbd></td><td>Newline in prompt (backslash + Enter)</td></tr>
+        <tr><td><kbd>Alt</kbd>+<kbd>Enter</kbd></td><td>Newline (most terminals)</td></tr>
+        <tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td><td>Newline (run <code>/terminal-setup</code> first)</td></tr>
+        <tr><td><kbd>Tab</kbd></td><td>Accept suggestion / add supplementary context</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>V</kbd></td><td>Paste image</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>G</kbd></td><td>Edit prompt in external editor (<code>$EDITOR</code>)</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>U</kbd></td><td>Clear entire input buffer</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>Session control</h4>
+      <table>
+        <tr><td><kbd>Esc</kbd></td><td>Interrupt Claude</td></tr>
+        <tr><td><kbd>Esc</kbd> <kbd>Esc</kbd></td><td>Open rewind menu</td></tr>
+        <tr><td><kbd>↑</kbd> after interrupt</td><td>Restore + rewind in one step</td></tr>
+        <tr><td><kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Cycle: normal → auto-accept → plan</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td>Send task to background</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>X</kbd> <kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Stop all background agents</td></tr>
+        <tr><td><kbd>Alt</kbd>/<kbd>Option</kbd>+<kbd>P</kbd></td><td>Switch models mid-prompt</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>R</kbd></td><td>Full output / context pane</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>Verbose transcript toggle</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>T</kbd></td><td>Toggle task list (when active)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="label">macOS Option key</span>
+    <kbd>Alt/Option</kbd> shortcuts (Alt+B, Alt+F, Alt+P, etc.) require configuring Option as Meta. In iTerm2: <em>Settings → Profiles → Keys → Left/Right Option key = "Esc+"</em>. In Terminal.app: <em>Settings → Profiles → Keyboard → "Use Option as Meta Key"</em>. In VS Code: <code>"terminal.integrated.macOptionIsMeta": true</code>.
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">Interactive mode &amp; shortcuts</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/terminal-config" target="_blank" rel="noopener">Terminal configuration</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener">Checkpointing &amp; rewind</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 05 SLASH ============ -->
+<section id="slash">
+  <div class="section-head">
+    <div class="section-num">05</div>
+    <h2>Slash commands<span class="sub">built-ins you actually reach for</span></h2>
+  </div>
+
+  <p>Type <kbd>/</kbd> to open the menu; continue typing to filter. Unknown commands now suggest the closest match. Full catalog in the <a class="ref" href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">commands reference</a>.</p>
+
+  <h3>Daily drivers</h3>
+  <table class="wide">
+    <tr><td>/init</td><td>Generate <code>CLAUDE.md</code> by scanning the repo. Run first in any new project.</td></tr>
+    <tr><td>/clear</td><td>Wipe conversation history (files on disk remain). Use when switching tasks.</td></tr>
+    <tr><td>/compact [focus]</td><td>Compress context while keeping a focus area. Use above ~80% context.</td></tr>
+    <tr><td>/rewind · /undo</td><td>Restore to a prior checkpoint — conversation, code, or both.</td></tr>
+    <tr><td>/context</td><td>Grouped view of skills, agents, rules, and context usage by category.</td></tr>
+    <tr><td>/stats · /cost</td><td>Token usage · spend breakdown for the current session.</td></tr>
+    <tr><td>/usage</td><td>Plan usage and rate-limit status.</td></tr>
+    <tr><td>/model [alias]</td><td>Switch model. Warns before switching mid-conversation (re-reads history uncached).</td></tr>
+    <tr><td>/effort [level]</td><td>Adaptive reasoning tuner: <code>low</code> / <code>medium</code> / <code>high</code>.</td></tr>
+    <tr><td>/btw</td><td>Ask a side question without polluting main conversation context.</td></tr>
+    <tr><td>/help</td><td>List everything, filtered as you type.</td></tr>
+  </table>
+
+  <h3>Project &amp; code</h3>
+  <table class="wide">
+    <tr><td>/review</td><td>Code review of recent changes.</td></tr>
+    <tr><td>/security-review</td><td>Automated security audit of the diff.</td></tr>
+    <tr><td>/pr_comments</td><td>Read / respond to PR review comments.</td></tr>
+    <tr><td>/add-dir [--remember]</td><td>Grant Claude access to an extra directory. <code>--remember</code> persists to settings.</td></tr>
+    <tr><td>/memory</td><td>Edit <code>CLAUDE.md</code> memory files inline.</td></tr>
+    <tr><td>/rename</td><td>Give the session a descriptive name (e.g. <code>oauth-migration</code>).</td></tr>
+    <tr><td>/sandbox</td><td>Enable sandboxed Bash tool with filesystem + network isolation.</td></tr>
+  </table>
+
+  <h3>Extensions &amp; integrations</h3>
+  <table class="wide">
+    <tr><td>/agents</td><td>Manage subagents (project + user scope). Tabbed UI for Running / Library.</td></tr>
+    <tr><td>/skills</td><td>List installed skills. Sort by token cost with <kbd>t</kbd> in newer versions.</td></tr>
+    <tr><td>/plugin</td><td>Plugin manager UI. <code>install</code> · <code>enable</code> · <code>disable</code> · <code>uninstall</code>.</td></tr>
+    <tr><td>/reload-plugins</td><td>Pick up plugin changes without restarting.</td></tr>
+    <tr><td>/mcp</td><td>MCP server list + OAuth actions.</td></tr>
+    <tr><td>/hooks</td><td>Configure event hooks.</td></tr>
+    <tr><td>/permissions</td><td>Inspect / edit permission rules.</td></tr>
+    <tr><td>/chrome</td><td>Drive Chrome via the Claude in Chrome extension. <span class="tag beta">BETA</span></td></tr>
+  </table>
+
+  <h3>Session &amp; environment</h3>
+  <table class="wide">
+    <tr><td>/config</td><td>Settings editor (replaces <span class="tag deprecated">/output-style</span>).</td></tr>
+    <tr><td>/theme</td><td>Colors + syntax highlighting. Toggle highlight with <kbd>Ctrl</kbd>+<kbd>T</kbd>.</td></tr>
+    <tr><td>/statusline</td><td>Customize terminal status line.</td></tr>
+    <tr><td>/terminal-setup</td><td>Install Shift+Enter binding (iTerm2, VS Code, Kitty, Alacritty, Zed, Warp).</td></tr>
+    <tr><td>/keybindings</td><td>Edit <code>~/.claude/keybindings.json</code>.</td></tr>
+    <tr><td>/vim</td><td>Vim-style modal editing in the prompt.</td></tr>
+    <tr><td>/tasks</td><td>Background task manager.</td></tr>
+    <tr><td>/login · /logout</td><td>Anthropic account auth.</td></tr>
+    <tr><td>/bug · /feedback</td><td>Report issues to Anthropic.</td></tr>
+    <tr><td>/doctor</td><td>Diagnostics: unreachable permission rules, duplicate MCP configs, missing deps.</td></tr>
+  </table>
+
+  <div class="note">
+    <span class="label">2.1.98</span>
+    Unknown slash commands now suggest the closest match (e.g. <code>/revieww</code> → "did you mean <code>/review</code>?"). MCP-exposed prompts appear as <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code>.
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills &amp; custom commands</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener">Checkpointing (/rewind)</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 06 PERMISSION MODES ============ -->
+<section id="modes">
+  <div class="section-head">
+    <div class="section-num">06</div>
+    <h2>Permission modes<span class="sub">what Claude can do without asking</span></h2>
+  </div>
+
+  <p class="lede">Toggle with <kbd>Shift</kbd>+<kbd>Tab</kbd>. The current mode shows under the prompt. Permission rules layer on top — see the <a class="ref" href="https://code.claude.com/docs/en/iam" target="_blank" rel="noopener">IAM &amp; permissions docs</a>.</p>
+
+  <table class="wide">
+    <tr><td>normal</td><td>Default. Asks before write/edit/bash and sensitive reads.</td></tr>
+    <tr><td>acceptEdits</td><td>"YOLO-lite". Accepts file edits automatically. Still asks for risky Bash.</td></tr>
+    <tr><td>plan</td><td>Read-only brainstorming. Produces a plan file, no writes. End plan to execute.</td></tr>
+    <tr><td>bypassPermissions</td><td>Accepts everything. Only use in sandboxed / throwaway envs. Can be disabled via <code>disableBypassPermissionsMode</code>.</td></tr>
+  </table>
+
+  <h4>Rule evaluation order</h4>
+  <p>Permission rules evaluate <strong>deny → ask → allow</strong>. First match wins. Use <code>Tool</code> alone or <code>Tool(specifier)</code> — for example, <code>Bash(git push:*)</code> or <code>Read(./.env*)</code>. MCP server rules use the server name: <code>mcp__github</code> (whole server) or an exact tool like <code>mcp__github__get_issue</code>. Wildcards on tool names don't exist.</p>
+
+  <div class="note warn">
+    <span class="label">Security</span>
+    <code>PreToolUse</code> hooks returning <code>updatedInput</code> are re-checked against <code>permissions.deny</code> rules. Deny <em>always</em> wins over hook-granted permissions — a hook cannot downgrade a deny into an ask (fixed in 2.1.101, behavior is now enforced strictly).
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Permission modes</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/iam" target="_blank" rel="noopener">Identity &amp; access management</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/settings" target="_blank" rel="noopener">Settings reference</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 07 MODELS ============ -->
+<section id="models">
+  <div class="section-head">
+    <div class="section-num">07</div>
+    <h2>Models &amp; effort<span class="sub">pick the right brain for the task</span></h2>
+  </div>
+
+  <p>Claude Code resolves aliases per-provider. On the Anthropic API, <code>opus</code> → Opus 4.7 and <code>sonnet</code> → Sonnet 4.6. On Bedrock / Vertex / Foundry, <code>opus</code> → Opus 4.6 and <code>sonnet</code> → Sonnet 4.5 (newer models available by explicit name or pinning env var). Always pin versions in production.</p>
+
+  <h3>Current model aliases</h3>
+  <table class="wide">
+    <tr><th>Alias</th><th>Anthropic API</th><th>Bedrock / Vertex / Foundry</th><th>Use for</th></tr>
+    <tr><td>opus</td><td>claude-opus-4-7</td><td>claude-opus-4-6</td><td>Architecture, complex reasoning, gnarly debugging</td></tr>
+    <tr><td>sonnet</td><td>claude-sonnet-4-6</td><td>claude-sonnet-4-5</td><td>Daily driver. 90 %+ of coding work.</td></tr>
+    <tr><td>haiku</td><td>claude-haiku-4-5</td><td>claude-haiku-4-5</td><td>Mechanical edits, routing, high-volume tasks</td></tr>
+    <tr><td>opusplan</td><td colspan="2" style="color:var(--text-dim)">hybrid</td><td>Opus for planning, Sonnet for execution</td></tr>
+  </table>
+
+  <div class="note">
+    <span class="label">Default</span>
+    Anthropic API defaults to Sonnet. Bedrock / Vertex / Foundry default to Sonnet 4.5. Pin versions for reproducibility with <code>ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL</code>.
+  </div>
+
+  <h3>Switching model</h3>
+<pre><code><span class="c"># Launch with a specific model</span>
+claude --model claude-sonnet-4-6
+claude --model claude-opus-4-7
+
+<span class="c"># Mid-session</span>
+/model sonnet
+/model opus
+/model opusplan
+
+<span class="c"># While typing a prompt</span>
+<span class="k">Alt</span>+<span class="k">P</span>  <span class="c"># or Option+P on macOS</span></code></pre>
+
+  <h3>Effort levels</h3>
+  <table>
+    <tr><td>low</td><td>Fast, cheap. Good for mechanical edits, routing, high-volume tasks.</td></tr>
+    <tr><td>medium</td><td>Default for most tasks. Balanced reasoning and speed.</td></tr>
+    <tr><td>high</td><td>Deep chain-of-thought. Use for thorny problems and architecture decisions.</td></tr>
+  </table>
+
+  <div class="note warn">
+    <span class="label">Cost gotcha</span>
+    Switching model mid-conversation re-reads the entire history without prompt-cache benefit — expensive on long sessions. Claude warns you first. Plan to switch at natural breaks (after <code>/clear</code> or <code>/compact</code>).
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration</a></li>
+      <li><a class="ref" href="https://support.claude.com/en/articles/11940350-claude-code-model-configuration" target="_blank" rel="noopener">Model configuration (support)</a></li>
+      <li><a class="ref" href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">Models overview (API)</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/fast-mode" target="_blank" rel="noopener">Fast mode</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 08 MEMORY ============ -->
+<section id="memory">
+  <div class="section-head">
+    <div class="section-num">08</div>
+    <h2>Memory · CLAUDE.md<span class="sub">persistent project brief</span></h2>
+  </div>
+
+  <p>Loaded automatically at session start. One per project root, plus a user-global file at <code>~/.claude/CLAUDE.md</code>. Edit inline via <code>/memory</code>. The first 200 lines or 25 KB — whichever comes first — are loaded into every session's context.</p>
+
+  <div class="grid-2">
+    <div>
+      <h4>What goes in it</h4>
+      <ul class="plain">
+        <li>Project purpose in 2–3 lines</li>
+        <li>Tech stack, package manager, Node/Python version</li>
+        <li>Commands: dev, test, lint, build, deploy</li>
+        <li>Conventions: commit style, branch names, code style</li>
+        <li>"Do not touch" zones (generated code, migrations, vendored libs)</li>
+        <li>Links to architecture docs (use <code>@path/to/doc.md</code> to import)</li>
+      </ul>
+    </div>
+    <div>
+      <h4>What doesn't</h4>
+      <ul class="plain">
+        <li>Secrets — use <code>.env</code> + <code>deny</code> rules instead</li>
+        <li>Everything about the codebase — Claude reads files on demand</li>
+        <li>Rarely-needed reference material — move to a skill</li>
+        <li>Stale instructions — trim aggressively; it costs context every turn</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>Example skeleton</h4>
+<pre><code><span class="c"># BrandName — project management SaaS</span>
+
+Stack: Next.js 15 · TypeScript · Drizzle + Postgres · Tailwind.
+Package manager: <span class="s">pnpm</span>. Node 20.
+
+## Commands
+- Dev: <span class="s">pnpm dev</span>
+- Test: <span class="s">pnpm test</span>  (Vitest, watch by default)
+- Lint: <span class="s">pnpm lint --fix</span>
+
+## Conventions
+- Commit style: Conventional Commits.
+- Server components by default; mark client with <span class="s">"use client"</span>.
+- Never edit <span class="s">db/migrations/**</span> — generate via <span class="s">pnpm db:generate</span>.
+
+## Refs
+@docs/architecture.md
+@docs/api-contract.md</code></pre>
+
+  <div class="note">
+    <span class="label">Rule of thumb</span>
+    Keep <code>CLAUDE.md</code> under 200 lines. If it's growing, move reference content to skills or split into <code>.claude/rules/</code> files with <code>paths</code> frontmatter that only load when Claude touches matching files.
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory management</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/features-overview" target="_blank" rel="noopener">CLAUDE.md vs. skills vs. rules</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">CLAUDE.md best practices</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 09 SKILLS & COMMANDS ============ -->
+<section id="skills">
+  <div class="section-head">
+    <div class="section-num">09</div>
+    <h2>Skills &amp; custom slash commands<span class="sub">package prompts as first-class assets</span></h2>
+  </div>
+
+  <p class="lede">Skills and commands have converged. <code>.claude/commands/</code> still works; <code>.claude/skills/</code> is the recommended home — it supports auto-invocation, supporting files, subagent execution, and the <a class="ref" href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Agent Skills open standard</a>.</p>
+
+  <table>
+    <tr><th>Dimension</th><th>Slash command</th><th>Skill</th></tr>
+    <tr><td>Invocation</td><td>User types <code>/name</code></td><td>Model picks it OR user types <code>/name</code></td></tr>
+    <tr><td>Location</td><td><code>.claude/commands/*.md</code></td><td><code>.claude/skills/&lt;name&gt;/SKILL.md</code></td></tr>
+    <tr><td>Structure</td><td>Single file</td><td>Directory + templates, scripts, refs</td></tr>
+    <tr><td>Best for</td><td>Quick repeat prompts</td><td>Reusable capabilities shared with team</td></tr>
+  </table>
+
+  <h3>Authoring a custom command</h3>
+<pre><code><span class="c">// .claude/commands/commit.md</span>
+---
+allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+argument-hint: [message]
+description: Create a conventional commit
+model: claude-haiku-4-5
+---
+
+## Context
+- Status: !`git status`
+- Diff: !`git diff HEAD`
+- Branch: !`git branch --show-current`
+- Recent: !`git log --oneline -10`
+
+## Task
+Create a single Conventional Commits commit.
+Message hint from user: $ARGUMENTS</code></pre>
+
+  <h3>Authoring a skill</h3>
+<pre><code><span class="c">// .claude/skills/api-conventions/SKILL.md</span>
+---
+name: api-conventions
+description: API design rules for this codebase. Use when writing
+  or reviewing any route under app/api or services/*.
+allowed-tools: Read, Grep, Glob
+---
+
+# API conventions
+
+- REST nouns; no verbs in paths.
+- Validate inputs with Zod at the route boundary.
+- Errors: return <span class="s">{ error: { code, message } }</span>, HTTP code matches.
+- Server components fetch via typed client in <span class="s">lib/api/</span>.</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h4>Argument patterns</h4>
+      <ul class="plain">
+        <li><code>$ARGUMENTS</code> — all args as one string</li>
+        <li><code>$1</code>, <code>$2</code>, <code>$3</code> — positional</li>
+        <li><code>!`cmd`</code> — run shell command, inject output</li>
+        <li><code>@path/to/file</code> — inline file contents</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Frontmatter keys worth knowing</h4>
+      <table>
+        <tr><td>allowed-tools</td><td>Restrict to a tool subset</td></tr>
+        <tr><td>model</td><td>Override model for this invocation</td></tr>
+        <tr><td>disable-model-invocation</td><td><code>true</code> = user-only</td></tr>
+        <tr><td>context: fork</td><td>Run in a forked context</td></tr>
+        <tr><td>agent</td><td>Run under a named subagent</td></tr>
+        <tr><td>argument-hint</td><td>Shows in command picker</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="label">2.1.98</span>
+    Skill descriptions are capped at 1,536 chars. Front-load the use case — when budget is tight, descriptions are truncated. Raise the total budget with <code>SLASH_COMMAND_TOOL_CHAR_BUDGET</code>.
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Extend Claude with skills</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/slash-commands" target="_blank" rel="noopener">Custom slash commands</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/skills" target="_blank" rel="noopener">Agent Skills in the SDK</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 10 SUBAGENTS ============ -->
+<section id="subagents">
+  <div class="section-head">
+    <div class="section-num">10</div>
+    <h2>Subagents<span class="sub">specialized workers with their own context</span></h2>
+  </div>
+
+  <p class="lede">Subagents run in an isolated context window with a custom system prompt and a whitelisted toolset. Use them when a task would pollute the main conversation, or when you want a proactive expert that jumps in automatically. They return a summary, not a full transcript — zero main-context cost.</p>
+
+<pre><code><span class="c">// .claude/agents/code-reviewer.md</span>
+---
+name: code-reviewer
+description: Proactively reviews code for quality, security,
+  maintainability. MUST BE USED immediately after writing or modifying code.
+tools: Read, Grep, Glob, Bash
+model: inherit
+---
+
+You are a senior reviewer. When invoked:
+1. Run <span class="s">git diff</span> to see recent changes.
+2. Check for: readability, naming, duplication, error handling,
+   exposed secrets, input validation, test coverage, performance.
+3. Output feedback by priority: Critical · Warnings · Suggestions.
+4. For each, provide a concrete fix.</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h4>Invocation</h4>
+      <ul class="plain">
+        <li><strong>Proactive</strong> — include "proactively" or "MUST BE USED" in <code>description</code>. Claude invokes automatically.</li>
+        <li><strong>Explicit</strong> — "Use the code-reviewer subagent to check my last diff."</li>
+        <li><strong>Chained</strong> — "Use debugger then code-reviewer."</li>
+        <li><strong>Inline CLI</strong> — <code>claude --agents '{...}'</code> for one-off definitions.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Scope &amp; frontmatter</h4>
+      <table>
+        <tr><td>.claude/agents/</td><td>Project subagents (highest priority)</td></tr>
+        <tr><td>~/.claude/agents/</td><td>Personal subagents</td></tr>
+        <tr><td>tools / disallowedTools</td><td>Tool allowlist / denylist</td></tr>
+        <tr><td>model / effort</td><td>Override per-agent</td></tr>
+        <tr><td>background</td><td>Run concurrently vs. blocking</td></tr>
+        <tr><td>isolation: worktree</td><td>Run inside a fresh git worktree</td></tr>
+        <tr><td>memory</td><td>Persistent agent-scoped dir</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="label">Tip</span>
+    Grant only the tools a subagent needs. A code-reviewer that can't <code>Edit</code> or <code>Write</code> is safer and stays in its lane.
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/subagents" target="_blank" rel="noopener">Subagents in the SDK</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/orchestrate" target="_blank" rel="noopener">Agent teams (orchestration)</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 11 HOOKS ============ -->
+<section id="hooks">
+  <div class="section-head">
+    <div class="section-num">11</div>
+    <h2>Hooks<span class="sub">shell scripts on lifecycle events</span></h2>
+  </div>
+
+  <div class="note danger">
+    <span class="label">Danger</span>
+    Hooks run shell commands with your credentials. Never install hooks you haven't read. Malicious hooks can exfiltrate secrets or destroy your filesystem.
+  </div>
+
+  <p>Hooks fall into three cadences: <strong>once per session</strong> (SessionStart, SessionEnd), <strong>once per turn</strong> (UserPromptSubmit, Stop, StopFailure), <strong>every tool call</strong> (PreToolUse, PostToolUse). They can be shell commands, HTTP endpoints, or prompts. See the <a class="ref" href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">full event schema reference</a>.</p>
+
+  <table>
+    <tr><th>Event</th><th>Fires when</th></tr>
+    <tr><td>SessionStart</td><td>Claude Code starts or resumes</td></tr>
+    <tr><td>UserPromptSubmit</td><td>You submit a prompt, before Claude sees it. Stdout adds to context.</td></tr>
+    <tr><td>PreToolUse</td><td>Before a tool call. Can block (exit 2) or mutate input.</td></tr>
+    <tr><td>PostToolUse</td><td>After a tool call completes</td></tr>
+    <tr><td>PreCompact</td><td>Before <code>/compact</code>. Can block with exit 2.</td></tr>
+    <tr><td>SubagentStop</td><td>Subagent finished. Gets <code>$AGENT_ID</code> + transcript path.</td></tr>
+    <tr><td>Stop</td><td>Claude finishes responding</td></tr>
+    <tr><td>SessionEnd</td><td>Session closes</td></tr>
+    <tr><td>Notification</td><td>Claude fires a notification</td></tr>
+    <tr><td>Setup</td><td>Repo setup / maintenance ops</td></tr>
+  </table>
+
+  <h4>Format &amp; wiring</h4>
+<pre><code><span class="c">// .claude/settings.json</span>
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command",
+            "command": "npx prettier --write \"$FILE_PATH\"" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command",
+            "command": "echo \"$(date): $CONVERSATION_SUMMARY\" &gt;&gt; ~/.claude/activity.log" }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h4>Exit codes</h4>
+      <table>
+        <tr><td>0</td><td>Success, continue</td></tr>
+        <tr><td>2</td><td>Block tool call, send stderr back to Claude</td></tr>
+        <tr><td>other</td><td>Error, surfaces in <code>--debug</code></td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>Useful env vars inside hooks</h4>
+      <ul class="plain">
+        <li><code>$FILE_PATH</code> — affected file</li>
+        <li><code>$CLAUDE_PROJECT_DIR</code> — project root</li>
+        <li><code>$CLAUDE_SESSION_ID</code> — current session</li>
+        <li><code>$CONVERSATION_SUMMARY</code> — Stop only</li>
+        <li><code>$AGENT_ID</code> — SubagentStop only</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Automate workflows with hooks</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/hooks" target="_blank" rel="noopener">Hooks in the SDK</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 12 MCP ============ -->
+<section id="mcp">
+  <div class="section-head">
+    <div class="section-num">12</div>
+    <h2>MCP servers<span class="sub">external tools &amp; services as first-class citizens</span></h2>
+  </div>
+
+  <p>Model Context Protocol servers expose tools, resources, and prompts. HTTP transport is preferred over stdio — it's cross-client compatible and easier to manage. See the <a class="ref" href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">MCP setup guide</a> and the <a class="ref" href="https://code.claude.com/docs/en/mcp-servers" target="_blank" rel="noopener">MCP servers directory</a>.</p>
+
+  <h3>Management</h3>
+  <table class="wide">
+    <tr><td>claude mcp add &lt;name&gt; &lt;cmd&gt;</td><td>Add stdio server with command</td></tr>
+    <tr><td>claude mcp add --transport http &lt;name&gt; &lt;url&gt;</td><td>Add HTTP-transport server</td></tr>
+    <tr><td>claude mcp add --transport sse &lt;name&gt; &lt;url&gt;</td><td>Add SSE-transport server</td></tr>
+    <tr><td>claude mcp list</td><td>Show installed servers</td></tr>
+    <tr><td>claude mcp get &lt;name&gt;</td><td>Details on one server</td></tr>
+    <tr><td>claude mcp remove &lt;name&gt;</td><td>Uninstall</td></tr>
+    <tr><td>/mcp enable|disable &lt;name&gt;</td><td>Toggle in-session</td></tr>
+  </table>
+
+  <h3>Tool Search — why 2.1.x MCP scales</h3>
+  <p>When MCP tool descriptions would consume more than 10 % of context, Claude Code loads them dynamically instead of preloading. Set <code>ENABLE_TOOL_SEARCH=true</code> to force it on. Expect ~85 % token reduction on heavy setups and better tool-selection accuracy on Opus.</p>
+
+  <div class="note">
+    <span class="label">HTTP transport</span>
+    For Context7, the right pattern is HTTP transport at <code>https://mcp.context7.com/mcp</code>, with the API key in <code>env.CONTEXT7_API_KEY</code> using the <code>ctx7sk_</code> prefix. Full quit-and-relaunch of Claude Desktop is required after config changes.
+  </div>
+
+  <h3>Popular connectors — quick reference</h3>
+  <table class="wide">
+    <tr><td>GitHub</td><td><code>claude mcp add --transport http github https://api.githubcopilot.com/mcp/</code></td></tr>
+    <tr><td>Linear</td><td><code>claude mcp add --transport http linear https://mcp.linear.app/mcp</code></td></tr>
+    <tr><td>Notion</td><td><code>claude mcp add --transport http notion https://mcp.notion.com/mcp</code></td></tr>
+    <tr><td>Sentry</td><td><code>claude mcp add --transport http sentry https://mcp.sentry.dev/mcp</code></td></tr>
+    <tr><td>Vercel</td><td><code>claude mcp add --transport http vercel https://mcp.vercel.com/</code></td></tr>
+    <tr><td>Supabase</td><td><code>npx -y @supabase/mcp-server-supabase@latest</code> (stdio, needs <code>SUPABASE_ACCESS_TOKEN</code>)</td></tr>
+    <tr><td>Stripe</td><td><code>claude mcp add --transport http stripe https://mcp.stripe.com</code></td></tr>
+    <tr><td>Playwright</td><td><code>npx @playwright/mcp@latest</code> (stdio)</td></tr>
+    <tr><td>Figma</td><td><code>claude mcp add --transport http figma https://mcp.figma.com/mcp</code></td></tr>
+    <tr><td>Cloudflare</td><td><code>claude mcp add --transport http cloudflare https://mcp.cloudflare.com/mcp</code></td></tr>
+  </table>
+
+  <p>MCP-exposed prompts appear as <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code>. Example: <code>/mcp__github__list_prs</code>.</p>
+
+  <h3>Enterprise policy</h3>
+<pre><code><span class="c">// /etc/claude-code/managed-mcp.json (excerpt)</span>
+{
+  "allowedMcpServers": [
+    { "serverName": "github" },
+    { "serverName": "sentry" }
+  ],
+  "deniedMcpServers": [
+    { "serverName": "filesystem" }
+  ]
+}</code></pre>
+  <p>Denylist takes absolute precedence over allowlist.</p>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">MCP setup guide</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/mcp-servers" target="_blank" rel="noopener">MCP servers directory</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/mcp" target="_blank" rel="noopener">MCP in the SDK</a></li>
+      <li><a class="ref" href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol spec</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 13 PLUGINS ============ -->
+<section id="plugins">
+  <div class="section-head">
+    <div class="section-num">13</div>
+    <h2>Plugins<span class="sub">share bundles of commands, agents, skills, hooks, MCPs</span></h2>
+  </div>
+
+  <p>A plugin is a self-contained directory — the unit of sharing for Claude Code extensions. Install scopes: <code>user</code> (personal), <code>project</code> (checked into git, shared with team), <code>local</code> (project-local, gitignored).</p>
+
+  <table class="wide">
+    <tr><td>/plugin</td><td>Open plugin manager UI</td></tr>
+    <tr><td>/plugin marketplace add &lt;url|path&gt;</td><td>Register a marketplace (GitHub org, local dir)</td></tr>
+    <tr><td>/plugin install &lt;name&gt;@&lt;marketplace&gt;</td><td>Install</td></tr>
+    <tr><td>/plugin enable|disable|uninstall &lt;name&gt;@&lt;mkt&gt;</td><td>Lifecycle</td></tr>
+    <tr><td>/reload-plugins</td><td>Pick up plugin changes without restart</td></tr>
+    <tr><td>claude plugin update</td><td>Pull latest marketplace versions</td></tr>
+    <tr><td>claude plugin install &lt;n&gt;@&lt;m&gt; --scope project</td><td>Install to project (shared with team)</td></tr>
+    <tr><td>claude --plugin-dir &lt;path&gt;</td><td>Dev-mode: load a local plugin for the session only</td></tr>
+  </table>
+
+  <h4>Plugin directory shape</h4>
+<pre><code>my-plugin/
+├── .claude-plugin/
+│   └── plugin.json        <span class="c"># manifest (required)</span>
+├── skills/                <span class="c"># auto-invokable capabilities</span>
+├── commands/              <span class="c"># flat .md slash commands</span>
+├── agents/                <span class="c"># subagents</span>
+├── hooks/                 <span class="c"># hook configs</span>
+├── monitors/              <span class="c"># background monitors</span>
+├── .mcp.json              <span class="c"># MCP servers</span>
+├── .lsp.json              <span class="c"># LSP servers</span>
+└── scripts/</code></pre>
+
+  <div class="note warn">
+    <span class="label">Audit first</span>
+    Plugins ship executable code. Review <code>plugin.json</code> and any hook scripts before enabling. Policy-managed plugins auto-update correctly regardless of where you first installed them from.
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/plugins" target="_blank" rel="noopener">Create plugins</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/plugins-reference" target="_blank" rel="noopener">Plugins reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/plugin-marketplaces" target="_blank" rel="noopener">Plugin marketplaces</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/plugins-discover" target="_blank" rel="noopener">Discover &amp; install plugins</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 14 BACKGROUND ============ -->
+<section id="background">
+  <div class="section-head">
+    <div class="section-num">14</div>
+    <h2>Background tasks &amp; worktrees<span class="sub">parallel work without context thrash</span></h2>
+  </div>
+
+  <h3>Background tasks</h3>
+  <table>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td>Send current task to background</td></tr>
+    <tr><td>Prefix prompt with <code>&amp;</code></td><td>Start backgrounded immediately</td></tr>
+    <tr><td>/tasks</td><td>List + manage running tasks</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>X</kbd> <kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Stop all background agents</td></tr>
+    <tr><td>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1</td><td>Disable entirely</td></tr>
+  </table>
+
+  <div class="note">
+    <span class="label">2.1.98</span>
+    The Monitor tool streams events from background scripts — a debugging lifesaver when a long-running subagent misbehaves.
+  </div>
+
+  <h3>Git worktrees</h3>
+  <p>Run parallel sessions on the same repo without <code>git stash</code> dances. Each worktree keeps its own Claude session with full context. Great for <em>"feature branch + urgent hotfix + model comparison"</em> scenarios.</p>
+
+<pre><code><span class="c"># Parallel feature + hotfix</span>
+git worktree add ../app-auth -b feature/auth main
+git worktree add ../app-hotfix -b hotfix/crit main
+
+cd ../app-auth   &amp;&amp; claude        <span class="c"># terminal 1</span>
+cd ../app-hotfix &amp;&amp; claude        <span class="c"># terminal 2</span>
+
+<span class="c"># Claude-native shortcut</span>
+claude -w feature/auth
+claude --worktree hotfix/crit</code></pre>
+
+  <p>In 2.1.98, the status line JSON input includes <code>workspace.git_worktree</code>, set whenever cwd is inside a linked worktree — handy for custom statuslines. Subagents with <code>isolation: worktree</code> run in a fresh worktree automatically.</p>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/background-tasks" target="_blank" rel="noopener">Background tasks</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Git worktrees</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/tools-reference" target="_blank" rel="noopener">Monitor tool (tools reference)</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 15 HEADLESS ============ -->
+<section id="headless">
+  <div class="section-head">
+    <div class="section-num">15</div>
+    <h2>Headless mode &amp; SDK<span class="sub">CI/CD, cron, pipelines</span></h2>
+  </div>
+
+  <p>Headless mode (<code>-p</code>/<code>--print</code>) is the backbone of every Claude-in-CI story: PR reviews, security audits, nightly dependency reports, log triage. The <a class="ref" href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener">Agent SDK</a> gives you the same capabilities from TypeScript or Python, with fine-grained control over permissions, hooks, and approvals.</p>
+
+  <h3>Print mode essentials</h3>
+<pre><code><span class="c"># One-shot</span>
+claude -p "summarize the last 10 commits"
+
+<span class="c"># Structured output with metadata (cost, session_id)</span>
+claude -p --output-format json "audit this file" &gt; result.json
+
+<span class="c"># Streaming messages for real-time UIs</span>
+claude -p --output-format stream-json "long task"
+
+<span class="c"># Pipe in</span>
+gh pr diff 123 | claude -p \
+  --append-system-prompt "You are a security reviewer" \
+  --output-format json \
+  --allowedTools "Read,Grep" &gt; audit.json
+
+<span class="c"># Multi-turn via session id</span>
+sid=$(claude -p "start analysis" --output-format json | jq -r .session_id)
+claude --resume "$sid" -p "now check test coverage"
+claude --resume "$sid" -p "summarize findings"</code></pre>
+
+  <h3>Caching for CI</h3>
+  <p>In 2.1.98, <code>--exclude-dynamic-system-prompt-sections</code> trims out per-user sections from print mode so cross-user prompt caching actually hits. Worth using on any shared CI job where many runs share a static system prompt.</p>
+
+  <h3>Agent SDK</h3>
+<pre><code><span class="c">// TypeScript — @anthropic-ai/claude-agent-sdk</span>
+import { query } from "@anthropic-ai/claude-agent-sdk";
+
+for await (const msg of query({
+  prompt: "/code-review",
+  options: { maxTurns: 3 }
+})) {
+  <span class="c">// msg has type + payload</span>
+  console.log(msg);
+}</code></pre>
+
+  <div class="note">
+    <span class="label">Tracing</span>
+    Headless/SDK sessions read <code>TRACEPARENT</code> / <code>TRACESTATE</code> from the environment, so Claude Code runs slot into your existing distributed trace tree. Use with <code>OTEL_LOG_TOOL_DETAILS</code> / <code>OTEL_LOG_TOOL_CONTENT</code> for full observability.
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener">Agent SDK overview</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/typescript" target="_blank" rel="noopener">TypeScript SDK reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/python" target="_blank" rel="noopener">Python SDK reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/observability" target="_blank" rel="noopener">OpenTelemetry observability</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/github-actions" target="_blank" rel="noopener">GitHub Actions integration</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/gitlab-ci-cd" target="_blank" rel="noopener">GitLab CI/CD integration</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 16 CONFIG ============ -->
+<section id="config">
+  <div class="section-head">
+    <div class="section-num">16</div>
+    <h2>Config &amp; permissions<span class="sub">settings.json patterns that actually matter</span></h2>
+  </div>
+
+  <p>Settings layer from enterprise → project → project-local → user. Full schema in the <a class="ref" href="https://code.claude.com/docs/en/settings" target="_blank" rel="noopener">settings reference</a>. Permission rule syntax is in the <a class="ref" href="https://code.claude.com/docs/en/iam" target="_blank" rel="noopener">IAM reference</a>.</p>
+
+  <h3>Commands</h3>
+  <table class="wide">
+    <tr><td>claude config list</td><td>All settings (merged view)</td></tr>
+    <tr><td>claude config get &lt;key&gt;</td><td>Read one setting</td></tr>
+    <tr><td>claude config set &lt;key&gt; &lt;value&gt;</td><td>Write</td></tr>
+    <tr><td>claude config add / remove &lt;key&gt; &lt;value&gt;</td><td>List-valued settings</td></tr>
+  </table>
+
+  <h3>Safe-default permission template</h3>
+<pre><code><span class="c">// .claude/settings.json</span>
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(pnpm *)",
+      "Bash(git status)",
+      "Bash(git diff)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(npm install *)",
+      "Bash(pnpm add *)"
+    ],
+    "deny": [
+      "Read(./.env*)",
+      "Read(./secrets/**)",
+      "Read(./**/credentials*)",
+      "Read(./**/*.key)",
+      "Read(./**/*.pem)",
+      "Bash(rm -rf:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}</code></pre>
+
+  <h3>Git-ignore essentials</h3>
+<pre><code><span class="c"># Keep personal settings out of git</span>
+.claude/settings.local.json
+
+<span class="c"># Keep policy-managed hooks + plugin locks IN git</span>
+<span class="c"># so the team gets the same behavior</span></code></pre>
+
+  <div class="note warn">
+    <span class="label">No wildcards on tool names</span>
+    <code>mcp__github__*</code> does nothing. Use <code>"mcp__github"</code> (whole server) or an exact tool name like <code>"mcp__github__get_issue"</code>.
+  </div>
+
+  <div class="note">
+    <span class="label">Reachability</span>
+    <code>claude doctor</code> warns about unreachable permission rules (e.g. a <code>deny</code> shadowed by an earlier <code>allow</code>). Run it after editing settings.
+  </div>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/settings" target="_blank" rel="noopener">Settings reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/iam" target="_blank" rel="noopener">Permissions &amp; IAM</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/enterprise-deployment" target="_blank" rel="noopener">Enterprise deployment</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/security" target="_blank" rel="noopener">Security considerations</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 17 ENV ============ -->
+<section id="env">
+  <div class="section-head">
+    <div class="section-num">17</div>
+    <h2>Environment variables<span class="sub">the knobs that change behavior globally</span></h2>
+  </div>
+
+  <p>Any env var can also be set under <code>env</code> in <code>settings.json</code> to apply it to every session. Full list in the <a class="ref" href="https://code.claude.com/docs/en/environment-variables" target="_blank" rel="noopener">environment variables reference</a>.</p>
+
+  <table class="wide">
+    <tr><th>Variable</th><th>Effect</th></tr>
+    <tr><td>ANTHROPIC_MODEL</td><td>Default model for new sessions</td></tr>
+    <tr><td>ANTHROPIC_DEFAULT_OPUS_MODEL</td><td>Pin Opus alias to a specific version (prod)</td></tr>
+    <tr><td>ANTHROPIC_DEFAULT_SONNET_MODEL</td><td>Pin Sonnet alias</td></tr>
+    <tr><td>ANTHROPIC_DEFAULT_HAIKU_MODEL</td><td>Pin Haiku alias</td></tr>
+    <tr><td>ANTHROPIC_AUTH_TOKEN</td><td>Custom auth header (proxies)</td></tr>
+    <tr><td>ANTHROPIC_CUSTOM_HEADERS</td><td>Extra HTTP headers</td></tr>
+    <tr><td>API_TIMEOUT_MS</td><td>Per-request API timeout</td></tr>
+    <tr><td>ENABLE_LSP_TOOL=1</td><td>Turn on Language Server Protocol integration</td></tr>
+    <tr><td>ENABLE_TOOL_SEARCH=true</td><td>Force dynamic MCP tool loading</td></tr>
+    <tr><td>SLASH_COMMAND_TOOL_CHAR_BUDGET</td><td>Raise the skill-description budget</td></tr>
+    <tr><td>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1</td><td>Disable background agents</td></tr>
+    <tr><td>CLAUDE_CODE_PERFORCE_MODE <span class="tag new">2.1.98</span></td><td>Fail on read-only edits with a <code>p4 edit</code> hint instead of overwriting</td></tr>
+    <tr><td>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB <span class="tag new">2.1.98</span></td><td>Scrub subprocess env + enable PID namespace isolation (Linux)</td></tr>
+    <tr><td>CLAUDE_CODE_SCRIPT_CAPS <span class="tag new">2.1.98</span></td><td>Cap per-session script invocations</td></tr>
+    <tr><td>CLAUDE_CODE_CERT_STORE</td><td><code>bundled</code> to skip OS CA store (enterprise TLS)</td></tr>
+    <tr><td>CLAUDE_ENV_FILE</td><td>Extra env file to source (e.g. <code>~/.zprofile</code>)</td></tr>
+    <tr><td>CLAUDE_CODE_TMPDIR</td><td>Override temp dir</td></tr>
+    <tr><td>CLAUDE_CODE_GIT_BASH_PATH</td><td>Windows: path to git-bash</td></tr>
+    <tr><td>CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1</td><td>Disable <code>cd</code> carry-over across Bash calls</td></tr>
+    <tr><td>ENABLE_PROMPT_CACHING_1H</td><td>Opt into 1-hour prompt cache TTL</td></tr>
+    <tr><td>FORCE_PROMPT_CACHING_5M</td><td>Force 5-minute TTL</td></tr>
+    <tr><td>DISABLE_TELEMETRY</td><td>Disable usage telemetry</td></tr>
+    <tr><td>DISABLE_PROMPT_CACHING</td><td>Kill prompt caching (warns at startup)</td></tr>
+    <tr><td>OTEL_LOG_USER_PROMPTS</td><td>Opt-in: include user prompts in OTEL spans</td></tr>
+    <tr><td>OTEL_LOG_TOOL_DETAILS / _CONTENT</td><td>Opt-in: tool-call detail in traces</td></tr>
+    <tr><td>TRACEPARENT / TRACESTATE <span class="tag new">2.1.98</span></td><td>W3C distributed tracing for Bash subprocesses + SDK</td></tr>
+  </table>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/environment-variables" target="_blank" rel="noopener">Environment variables reference</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/observability" target="_blank" rel="noopener">OpenTelemetry observability</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 18 WORKFLOWS ============ -->
+<section id="workflows">
+  <div class="section-head">
+    <div class="section-num">18</div>
+    <h2>Workflows that pay rent<span class="sub">battle-tested patterns, not theoretical ones</span></h2>
+  </div>
+
+  <p>Starting points, not scripture. Mix and match for your stack. For richer patterns, see <a class="ref" href="https://code.claude.com/docs/en/common-workflows" target="_blank" rel="noopener">common workflows</a> and <a class="ref" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">best practices</a>.</p>
+
+  <h3>1. New-project bootstrap</h3>
+<pre><code>cd your-project
+claude
+&gt; /init
+&gt; <span class="c"># review the generated CLAUDE.md, trim aggressively</span>
+&gt; /memory   <span class="c"># add commands, conventions, "do not touch" zones</span>
+&gt; /permissions   <span class="c"># lock down .env and secrets</span></code></pre>
+
+  <h3>2. Plan → execute with opusplan</h3>
+<pre><code>claude --model opusplan
+&gt; <span class="k">Shift</span>+<span class="k">Tab</span> <span class="k">Shift</span>+<span class="k">Tab</span>   <span class="c"># enter plan mode</span>
+&gt; Plan a migration from REST to GraphQL for the user service.
+&gt; <span class="c"># exit plan → Claude switches to Sonnet for execution</span></code></pre>
+
+  <h3>3. Safe parallel work</h3>
+<pre><code>git worktree add ../app-hotfix -b hotfix/login-500 main
+cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
+<span class="c"># main project keeps running in the other terminal, full context</span></code></pre>
+
+  <h3>4. Automated PR review in CI</h3>
+<pre><code><span class="c"># .github/workflows/review.yml (excerpt)</span>
+- run: |
+    gh pr diff ${{ github.event.number }} | \
+      claude -p \
+        --append-system-prompt "Senior reviewer. Focus on security, regressions." \
+        --output-format json \
+        --allowedTools "Read,Grep" \
+        --exclude-dynamic-system-prompt-sections \
+      &gt; review.json</code></pre>
+
+  <h3>5. Auto-format on write</h3>
+<pre><code><span class="c">// .claude/settings.json</span>
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "npx prettier --write \"$FILE_PATH\" 2&gt;/dev/null || true"
+      }]
+    }]
+  }
+}</code></pre>
+
+  <h3>6. Cost discipline</h3>
+  <ul class="plain">
+    <li>Start on Sonnet; <code>/model opus</code> only when it's stuck.</li>
+    <li><code>/compact</code> at ~80 % context — cheaper than letting it auto-compact under pressure.</li>
+    <li><code>/clear</code> between unrelated tasks. Don't pay to carry old context.</li>
+    <li>Frequent custom commands: pin <code>model: claude-haiku-4-5</code> in frontmatter.</li>
+    <li><code>/effort low</code> for mechanical work; save <code>high</code> for hard reasoning.</li>
+    <li><code>/btw</code> for side questions — answers in a dismissible overlay, never enter history.</li>
+  </ul>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/common-workflows" target="_blank" rel="noopener">Common workflows</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Best practices</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/reduce-token-usage" target="_blank" rel="noopener">Reduce token usage</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 19 GOTCHAS ============ -->
+<section id="gotchas">
+  <div class="section-head">
+    <div class="section-num">19</div>
+    <h2>Gotchas &amp; limits<span class="sub">the things nobody tells you until you hit them</span></h2>
+  </div>
+
+  <ul class="plain">
+    <li><strong>Checkpoints ≠ git.</strong> <code>/rewind</code> restores tracked edits only. Changes made by <code>rm</code>, <code>mv</code>, <code>cp</code>, or external editors are <em>not</em> recoverable. Commit often.</li>
+    <li><strong>Permission wildcards don't exist for tool names.</strong> <code>mcp__github__*</code> matches nothing. Use the server name alone or list tools explicitly.</li>
+    <li><strong>Switching model mid-conversation is expensive.</strong> Full history re-reads without cache. Claude warns you — read the warning.</li>
+    <li><strong><code>.local</code> suffix is convention, not magic.</strong> <code>.claude/settings.local.json</code> is not auto-ignored. You still need a <code>.gitignore</code> entry.</li>
+    <li><strong>Homebrew / winget don't auto-update.</strong> Only the native installer does. Run <code>brew upgrade claude-code</code> or <code>winget upgrade Anthropic.ClaudeCode</code> manually.</li>
+    <li><strong>MCP tool descriptions can swallow context.</strong> Enable <code>ENABLE_TOOL_SEARCH=true</code> on heavy setups — 85 % token reduction in Anthropic's benchmarks.</li>
+    <li><strong>Hooks run with your credentials.</strong> Always audit plugin hook scripts before enabling. <code>PreToolUse</code> hooks cannot override <code>permissions.deny</code> — deny wins.</li>
+    <li><strong>Skills that should never auto-fire need <code>disable-model-invocation: true</code>.</strong> Otherwise Claude may invoke them at surprising moments.</li>
+    <li><strong>Print mode + <code>-c</code> was buggy before 2.1.101.</strong> If you're on 2.1.98 and using headless resume, verify context is intact on long sessions.</li>
+    <li><strong>Pin models in production.</strong> Aliases shift when new models ship. Set <code>ANTHROPIC_DEFAULT_*_MODEL</code> to versioned IDs so your agents are reproducible.</li>
+    <li><strong>Enterprise MCP denylist wins.</strong> If a server is in both <code>allowedMcpServers</code> and <code>deniedMcpServers</code>, denied wins — regardless of order.</li>
+    <li><strong>Subagent worktree isolation.</strong> Subagents running in isolated worktrees need Read/Edit access to files inside their own worktree; older builds denied this (fixed 2.1.101).</li>
+    <li><strong>Environment variables don't persist across Bash calls.</strong> An <code>export</code> in one command won't be available in the next. Use <code>CLAUDE_ENV_FILE</code> or a <code>SessionStart</code> hook to populate env dynamically.</li>
+    <li><strong><code>cd</code> carries over between Bash calls by default</strong> (but not across subagent sessions). Disable with <code>CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1</code> if it causes confusion.</li>
+  </ul>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/troubleshooting" target="_blank" rel="noopener">Troubleshooting</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/security" target="_blank" rel="noopener">Security considerations</a></li>
+      <li><a class="ref" href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div>Claude Code · v2.1.98 reference · Anthropic.</div>
+  <div>
+    <a href="https://code.claude.com/docs">docs</a> ·
+    <a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md">changelog</a> ·
+    <a href="https://support.claude.com">support</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
