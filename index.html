@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Claude Code Cheatsheet — 2.1.98</title>
+<title>Claude Code Cheatsheet — 2.1.104</title>
 <link rel="icon" href="https://fav.farm/🔥" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -497,11 +497,11 @@
     <a href="#" class="title-link" aria-label="Back to top">
       <div class="title-block">
         <h1>Claude <em>Code</em></h1>
-        <div class="tagline">Agentic coding in the terminal · <span>v2.1.98 cheatsheet</span> · built for daily reference</div>
+        <div class="tagline">Agentic coding in the terminal · <span>v2.1.104 cheatsheet</span> · built for daily reference</div>
       </div>
     </a>
     <div class="meta">
-      <div class="ver">v2.1.98</div><br>
+      <div class="ver">v2.1.104</div><br>
       Verify install: <code>claude --version</code><br>
       Upgrade: <code>claude update</code>
     </div>
@@ -713,9 +713,9 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
       </table>
     </div>
     <div>
-      <h4>New or notable in 2.1.98</h4>
+      <h4>Notable flags since 2.1.98</h4>
       <table>
-        <tr><td>--exclude-dynamic-<br>system-prompt-sections</td><td><span class="tag new">NEW</span>Better cross-user prompt caching in print mode</td></tr>
+        <tr><td>--exclude-dynamic-<br>system-prompt-sections</td><td>Better cross-user prompt caching in print mode</td></tr>
         <tr><td>--setting-sources</td><td>Restrict loaded settings to specific sources</td></tr>
       </table>
 
@@ -805,7 +805,7 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
     <h2>Slash commands<span class="sub">built-ins you actually reach for</span></h2>
   </div>
 
-  <p>Type <kbd>/</kbd> to open the menu; continue typing to filter. Unknown commands now suggest the closest match. Full catalog in the <a class="ref" href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">commands reference</a>.</p>
+  <p>Type <kbd>/</kbd> to open the menu; continue typing to filter. Unknown commands suggest the closest match. Full catalog in the <a class="ref" href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">commands reference</a>.</p>
 
   <h3>Daily drivers</h3>
   <table class="wide">
@@ -827,6 +827,7 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
     <tr><td>/review</td><td>Code review of recent changes.</td></tr>
     <tr><td>/security-review</td><td>Automated security audit of the diff.</td></tr>
     <tr><td>/pr_comments</td><td>Read / respond to PR review comments.</td></tr>
+    <tr><td>/team-onboarding</td><td>Generate an onboarding guide for new contributors based on the project structure and CLAUDE.md. <span class="tag new">2.1.101</span></td></tr>
     <tr><td>/add-dir [--remember]</td><td>Grant Claude access to an extra directory. <code>--remember</code> persists to settings.</td></tr>
     <tr><td>/memory</td><td>Edit <code>CLAUDE.md</code> memory files inline.</td></tr>
     <tr><td>/rename</td><td>Give the session a descriptive name (e.g. <code>oauth-migration</code>).</td></tr>
@@ -860,8 +861,8 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
   </table>
 
   <div class="note">
-    <span class="label">2.1.98</span>
-    Unknown slash commands now suggest the closest match (e.g. <code>/revieww</code> → "did you mean <code>/review</code>?"). MCP-exposed prompts appear as <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code>.
+    <span class="label">Tips</span>
+    Unknown slash commands suggest the closest match (e.g. <code>/revieww</code> → "did you mean <code>/review</code>?"). MCP-exposed prompts appear as <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code>.
   </div>
 
   <div class="docs-links">
@@ -895,7 +896,7 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
 
   <div class="note warn">
     <span class="label">Security</span>
-    <code>PreToolUse</code> hooks returning <code>updatedInput</code> are re-checked against <code>permissions.deny</code> rules. Deny <em>always</em> wins over hook-granted permissions — a hook cannot downgrade a deny into an ask (fixed in 2.1.101, behavior is now enforced strictly).
+    <code>PreToolUse</code> hooks returning <code>updatedInput</code> are re-checked against <code>permissions.deny</code> rules. Deny <em>always</em> wins over hook-granted permissions — a hook cannot downgrade a deny into an ask.
   </div>
 
   <div class="docs-links">
@@ -1110,7 +1111,7 @@ allowed-tools: Read, Grep, Glob
   </div>
 
   <div class="note">
-    <span class="label">2.1.98</span>
+    <span class="label">Description budget</span>
     Skill descriptions are capped at 1,536 chars. Front-load the use case — when budget is tight, descriptions are truncated. Raise the total budget with <code>SLASH_COMMAND_TOOL_CHAR_BUDGET</code>.
   </div>
 
@@ -1183,7 +1184,7 @@ You are a senior reviewer. When invoked:
     <ul>
       <li><a class="ref" href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a></li>
       <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/subagents" target="_blank" rel="noopener">Subagents in the SDK</a></li>
-      <li><a class="ref" href="https://code.claude.com/docs/en/orchestrate" target="_blank" rel="noopener">Agent teams (orchestration)</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/agent-teams" target="_blank" rel="noopener">Agent teams (orchestration)</a></li>
     </ul>
   </div>
 </section>
@@ -1278,7 +1279,7 @@ You are a senior reviewer. When invoked:
     <h2>MCP servers<span class="sub">external tools &amp; services as first-class citizens</span></h2>
   </div>
 
-  <p>Model Context Protocol servers expose tools, resources, and prompts. HTTP transport is preferred over stdio — it's cross-client compatible and easier to manage. See the <a class="ref" href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">MCP setup guide</a> and the <a class="ref" href="https://code.claude.com/docs/en/mcp-servers" target="_blank" rel="noopener">MCP servers directory</a>.</p>
+  <p>Model Context Protocol servers expose tools, resources, and prompts. HTTP transport is preferred over stdio — it's cross-client compatible and easier to manage. See the <a class="ref" href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">MCP setup guide</a>.</p>
 
   <h3>Management</h3>
   <table class="wide">
@@ -1332,7 +1333,6 @@ You are a senior reviewer. When invoked:
     <div class="docs-links-label">Read deeper</div>
     <ul>
       <li><a class="ref" href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">MCP setup guide</a></li>
-      <li><a class="ref" href="https://code.claude.com/docs/en/mcp-servers" target="_blank" rel="noopener">MCP servers directory</a></li>
       <li><a class="ref" href="https://code.claude.com/docs/en/agent-sdk/mcp" target="_blank" rel="noopener">MCP in the SDK</a></li>
       <li><a class="ref" href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol spec</a></li>
     </ul>
@@ -1383,7 +1383,7 @@ You are a senior reviewer. When invoked:
       <li><a class="ref" href="https://code.claude.com/docs/en/plugins" target="_blank" rel="noopener">Create plugins</a></li>
       <li><a class="ref" href="https://code.claude.com/docs/en/plugins-reference" target="_blank" rel="noopener">Plugins reference</a></li>
       <li><a class="ref" href="https://code.claude.com/docs/en/plugin-marketplaces" target="_blank" rel="noopener">Plugin marketplaces</a></li>
-      <li><a class="ref" href="https://code.claude.com/docs/en/plugins-discover" target="_blank" rel="noopener">Discover &amp; install plugins</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/discover-plugins" target="_blank" rel="noopener">Discover &amp; install plugins</a></li>
     </ul>
   </div>
 </section>
@@ -1405,7 +1405,7 @@ You are a senior reviewer. When invoked:
   </table>
 
   <div class="note">
-    <span class="label">2.1.98</span>
+    <span class="label">Monitor tool</span>
     The Monitor tool streams events from background scripts — a debugging lifesaver when a long-running subagent misbehaves.
   </div>
 
@@ -1423,13 +1423,12 @@ cd ../app-hotfix &amp;&amp; claude        <span class="c"># terminal 2</span>
 claude -w feature/auth
 claude --worktree hotfix/crit</code></pre>
 
-  <p>In 2.1.98, the status line JSON input includes <code>workspace.git_worktree</code>, set whenever cwd is inside a linked worktree — handy for custom statuslines. Subagents with <code>isolation: worktree</code> run in a fresh worktree automatically.</p>
+  <p>The status line JSON input includes <code>workspace.git_worktree</code>, set whenever cwd is inside a linked worktree — handy for custom statuslines. Subagents with <code>isolation: worktree</code> run in a fresh worktree automatically.</p>
 
   <div class="docs-links">
     <div class="docs-links-label">Read deeper</div>
     <ul>
-      <li><a class="ref" href="https://code.claude.com/docs/en/background-tasks" target="_blank" rel="noopener">Background tasks</a></li>
-      <li><a class="ref" href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Git worktrees</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/common-workflows" target="_blank" rel="noopener">Common workflows (background &amp; worktrees)</a></li>
       <li><a class="ref" href="https://code.claude.com/docs/en/tools-reference" target="_blank" rel="noopener">Monitor tool (tools reference)</a></li>
     </ul>
   </div>
@@ -1466,7 +1465,7 @@ claude --resume "$sid" -p "now check test coverage"
 claude --resume "$sid" -p "summarize findings"</code></pre>
 
   <h3>Caching for CI</h3>
-  <p>In 2.1.98, <code>--exclude-dynamic-system-prompt-sections</code> trims out per-user sections from print mode so cross-user prompt caching actually hits. Worth using on any shared CI job where many runs share a static system prompt.</p>
+  <p><code>--exclude-dynamic-system-prompt-sections</code> trims out per-user sections from print mode so cross-user prompt caching actually hits. Worth using on any shared CI job where many runs share a static system prompt.</p>
 
   <h3>Agent SDK</h3>
 <pre><code><span class="c">// TypeScript — @anthropic-ai/claude-agent-sdk</span>
@@ -1567,7 +1566,7 @@ for await (const msg of query({
     <ul>
       <li><a class="ref" href="https://code.claude.com/docs/en/settings" target="_blank" rel="noopener">Settings reference</a></li>
       <li><a class="ref" href="https://code.claude.com/docs/en/iam" target="_blank" rel="noopener">Permissions &amp; IAM</a></li>
-      <li><a class="ref" href="https://code.claude.com/docs/en/enterprise-deployment" target="_blank" rel="noopener">Enterprise deployment</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/third-party-integrations" target="_blank" rel="noopener">Enterprise &amp; third-party integrations</a></li>
       <li><a class="ref" href="https://code.claude.com/docs/en/security" target="_blank" rel="noopener">Security considerations</a></li>
     </ul>
   </div>
@@ -1595,10 +1594,10 @@ for await (const msg of query({
     <tr><td>ENABLE_TOOL_SEARCH=true</td><td>Force dynamic MCP tool loading</td></tr>
     <tr><td>SLASH_COMMAND_TOOL_CHAR_BUDGET</td><td>Raise the skill-description budget</td></tr>
     <tr><td>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1</td><td>Disable background agents</td></tr>
-    <tr><td>CLAUDE_CODE_PERFORCE_MODE <span class="tag new">2.1.98</span></td><td>Fail on read-only edits with a <code>p4 edit</code> hint instead of overwriting</td></tr>
-    <tr><td>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB <span class="tag new">2.1.98</span></td><td>Scrub subprocess env + enable PID namespace isolation (Linux)</td></tr>
-    <tr><td>CLAUDE_CODE_SCRIPT_CAPS <span class="tag new">2.1.98</span></td><td>Cap per-session script invocations</td></tr>
-    <tr><td>CLAUDE_CODE_CERT_STORE</td><td><code>bundled</code> to skip OS CA store (enterprise TLS)</td></tr>
+    <tr><td>CLAUDE_CODE_PERFORCE_MODE <span class="tag">2.1.98</span></td><td>Fail on read-only edits with a <code>p4 edit</code> hint instead of overwriting</td></tr>
+    <tr><td>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB <span class="tag">2.1.98</span></td><td>Scrub subprocess env + enable PID namespace isolation (Linux)</td></tr>
+    <tr><td>CLAUDE_CODE_SCRIPT_CAPS <span class="tag">2.1.98</span></td><td>Cap per-session script invocations</td></tr>
+    <tr><td>CLAUDE_CODE_CERT_STORE</td><td><code>bundled</code> to use bundled CA store instead of OS trust store</td></tr>
     <tr><td>CLAUDE_ENV_FILE</td><td>Extra env file to source (e.g. <code>~/.zprofile</code>)</td></tr>
     <tr><td>CLAUDE_CODE_TMPDIR</td><td>Override temp dir</td></tr>
     <tr><td>CLAUDE_CODE_GIT_BASH_PATH</td><td>Windows: path to git-bash</td></tr>
@@ -1609,7 +1608,7 @@ for await (const msg of query({
     <tr><td>DISABLE_PROMPT_CACHING</td><td>Kill prompt caching (warns at startup)</td></tr>
     <tr><td>OTEL_LOG_USER_PROMPTS</td><td>Opt-in: include user prompts in OTEL spans</td></tr>
     <tr><td>OTEL_LOG_TOOL_DETAILS / _CONTENT</td><td>Opt-in: tool-call detail in traces</td></tr>
-    <tr><td>TRACEPARENT / TRACESTATE <span class="tag new">2.1.98</span></td><td>W3C distributed tracing for Bash subprocesses + SDK</td></tr>
+    <tr><td>TRACEPARENT / TRACESTATE <span class="tag">2.1.98</span></td><td>W3C distributed tracing for Bash subprocesses + SDK</td></tr>
   </table>
 
   <div class="docs-links">
@@ -1710,12 +1709,12 @@ cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
     <li><strong>MCP tool descriptions can swallow context.</strong> Enable <code>ENABLE_TOOL_SEARCH=true</code> on heavy setups — 85 % token reduction in Anthropic's benchmarks.</li>
     <li><strong>Hooks run with your credentials.</strong> Always audit plugin hook scripts before enabling. <code>PreToolUse</code> hooks cannot override <code>permissions.deny</code> — deny wins.</li>
     <li><strong>Skills that should never auto-fire need <code>disable-model-invocation: true</code>.</strong> Otherwise Claude may invoke them at surprising moments.</li>
-    <li><strong>Print mode + <code>-c</code> was buggy before 2.1.101.</strong> If you're on 2.1.98 and using headless resume, verify context is intact on long sessions.</li>
     <li><strong>Pin models in production.</strong> Aliases shift when new models ship. Set <code>ANTHROPIC_DEFAULT_*_MODEL</code> to versioned IDs so your agents are reproducible.</li>
     <li><strong>Enterprise MCP denylist wins.</strong> If a server is in both <code>allowedMcpServers</code> and <code>deniedMcpServers</code>, denied wins — regardless of order.</li>
-    <li><strong>Subagent worktree isolation.</strong> Subagents running in isolated worktrees need Read/Edit access to files inside their own worktree; older builds denied this (fixed 2.1.101).</li>
+    <li><strong>Subagent worktree isolation.</strong> Subagents running in isolated worktrees need Read/Edit access to files inside their own worktree.</li>
     <li><strong>Environment variables don't persist across Bash calls.</strong> An <code>export</code> in one command won't be available in the next. Use <code>CLAUDE_ENV_FILE</code> or a <code>SessionStart</code> hook to populate env dynamically.</li>
     <li><strong><code>cd</code> carries over between Bash calls by default</strong> (but not across subagent sessions). Disable with <code>CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1</code> if it causes confusion.</li>
+    <li><strong>OS CA store is trusted by default.</strong> Use <code>CLAUDE_CODE_CERT_STORE=bundled</code> only if you need to skip OS certificate trust (some enterprise TLS setups).</li>
   </ul>
 
   <div class="docs-links">
@@ -1729,7 +1728,7 @@ cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
 </section>
 
 <footer>
-  <div>Claude Code · v2.1.98 reference · Anthropic.</div>
+  <div>Claude Code · v2.1.104 reference · Anthropic.</div>
   <div>
     <a href="https://code.claude.com/docs">docs</a> ·
     <a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md">changelog</a> ·
