@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Claude Code Cheatsheet — 2.1.104</title>
+<title>Claude Code Cheatsheet — 2.1.118</title>
 <link rel="icon" href="https://fav.farm/🔥" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,19 +18,20 @@
     --text: #ededea;
     --text-dim: #a8a6a0;
     --text-faint: #6a6862;
-    --accent: #d97757;            /* Anthropic-ish clay */
+    --accent: #d97757;
     --accent-soft: #3a2419;
     --accent-bright: #e88a68;
-    --key: #f0c07a;               /* warm highlight for keys */
-    --cmd: #8fb8a8;               /* muted sage for commands */
+    --key: #f0c07a;
+    --cmd: #8fb8a8;
     --string: #c9a876;
     --warn: #d97757;
     --danger: #c85a4e;
     --good: #6a9a7b;
     --purple: #a896c9;
-    --link: #b7d4c4;              /* legible sage-blue for inline links */
+    --link: #b7d4c4;
+    --new: #6fcfa0;
+    --new-soft: #0e2a1e;
 
-    /* Typography scale */
     --body: 15px;
     --small: 13.5px;
     --tiny: 12px;
@@ -49,7 +50,6 @@
       radial-gradient(ellipse at top left, rgba(217,119,87,0.04) 0%, transparent 50%),
       radial-gradient(ellipse at bottom right, rgba(168,150,201,0.03) 0%, transparent 50%);
     background-attachment: fixed;
-    /* Reserve space for the fixed banner */
     padding-top: 148px;
   }
   .wrap {
@@ -169,7 +169,7 @@
   /* ===== Sections ===== */
   section {
     margin-bottom: 80px;
-    scroll-margin-top: 160px; /* account for fixed banner */
+    scroll-margin-top: 160px;
   }
   .section-head {
     display: grid;
@@ -205,7 +205,6 @@
     font-style: normal;
   }
 
-  /* Subheadings */
   h3 {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
@@ -228,7 +227,6 @@
     letter-spacing: 0.005em;
   }
 
-  /* Prose */
   p {
     margin-bottom: 14px;
     color: var(--text);
@@ -240,7 +238,6 @@
     line-height: 1.7;
   }
 
-  /* Inline links — subtle but legible */
   a.ref {
     color: var(--link);
     text-decoration: none;
@@ -257,7 +254,6 @@
     color: var(--text-faint);
   }
 
-  /* Doc links block at end of section */
   .docs-links {
     margin-top: 28px;
     padding: 14px 18px;
@@ -284,7 +280,6 @@
   .docs-links li { margin: 0; padding: 0; }
   .docs-links li::before { display: none; }
 
-  /* Code */
   code {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--code);
@@ -320,8 +315,8 @@
   pre .v { color: var(--key); }
   pre .s { color: var(--cmd); }
   pre .f { color: var(--purple); }
+  pre .n { color: var(--new); }
 
-  /* Tables */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -357,7 +352,6 @@
   tr:last-child td { border-bottom: none; }
   table.wide td:first-child { white-space: normal; }
 
-  /* Lists */
   ul, ol {
     padding-left: 22px;
     margin-bottom: 16px;
@@ -380,7 +374,6 @@
     font-weight: 700;
   }
 
-  /* Grid */
   .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -400,7 +393,6 @@
     .title-block h1 { font-size: 42px; }
   }
 
-  /* Callouts */
   .note {
     border: 1px solid var(--border);
     border-left: 2px solid var(--key);
@@ -413,6 +405,7 @@
   .note.warn { border-left-color: var(--warn); background: rgba(217, 119, 87, 0.04); }
   .note.danger { border-left-color: var(--danger); background: rgba(200, 90, 78, 0.04); }
   .note.good { border-left-color: var(--good); background: rgba(106, 154, 123, 0.04); }
+  .note.new { border-left-color: var(--new); background: rgba(111, 207, 160, 0.04); }
   .note .label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10.5px;
@@ -425,9 +418,9 @@
   .note.warn .label { color: var(--warn); }
   .note.danger .label { color: var(--danger); }
   .note.good .label { color: var(--good); }
+  .note.new .label { color: var(--new); }
   .note .label::after { content: '·'; margin-left: 10px; color: var(--text-faint); }
 
-  /* Keyboard */
   kbd {
     display: inline-block;
     font-family: 'JetBrains Mono', monospace;
@@ -443,7 +436,6 @@
     line-height: 1.4;
   }
 
-  /* Tag chips */
   .tag {
     display: inline-block;
     font-family: 'JetBrains Mono', monospace;
@@ -458,11 +450,15 @@
     margin-left: 6px;
     vertical-align: middle;
   }
-  .tag.new { color: var(--accent); border-color: var(--accent); }
+  .tag.new { color: var(--new); border-color: var(--new); }
   .tag.beta { color: var(--purple); border-color: var(--purple); }
   .tag.deprecated { color: var(--danger); border-color: var(--danger); text-decoration: line-through; }
+  .tag.fix { color: #7ab8e8; border-color: #7ab8e8; }
+  .tag.security { color: var(--danger); border-color: var(--danger); }
+  .tag.windows { color: var(--purple); border-color: var(--purple); }
+  .tag.perf { color: var(--key); border-color: var(--key); }
+  .tag.v { color: var(--text-faint); border-color: var(--border); font-size: 9.5px; }
 
-  /* Footer */
   footer {
     border-top: 1px solid var(--border);
     padding-top: 28px;
@@ -476,19 +472,16 @@
   footer a { color: var(--text-dim); text-decoration: none; }
   footer a:hover { color: var(--accent); }
 
-  /* Scrollbar */
   ::-webkit-scrollbar { height: 10px; width: 10px; }
   ::-webkit-scrollbar-track { background: var(--bg-sunk); }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 5px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
 
-  /* Top-of-page anchor target */
   #top { scroll-margin-top: 0; }
 </style>
 </head>
 <body>
 
-<!-- Invisible top anchor so the title-link returns users above the TOC -->
 <span id="top" aria-hidden="true"></span>
 
 <!-- ===== Fixed Banner ===== -->
@@ -497,11 +490,11 @@
     <a href="#" class="title-link" aria-label="Back to top">
       <div class="title-block">
         <h1>Claude <em>Code</em></h1>
-        <div class="tagline">Agentic coding in the terminal · <span>v2.1.104 cheatsheet</span> · built for daily reference</div>
+        <div class="tagline">Agentic coding in the terminal · <span>v2.1.118 cheatsheet</span> · built for daily reference</div>
       </div>
     </a>
     <div class="meta">
-      <div class="ver">v2.1.104</div><br>
+      <div class="ver">v2.1.118</div><br>
       Verify install: <code>claude --version</code><br>
       Upgrade: <code>claude update</code>
     </div>
@@ -531,8 +524,9 @@
     <li><a href="#headless"><span class="num">15</span>Headless / SDK</a></li>
     <li><a href="#config"><span class="num">16</span>Config &amp; settings</a></li>
     <li><a href="#env"><span class="num">17</span>Env variables</a></li>
-    <li><a href="#workflows"><span class="num">18</span>Workflows</a></li>
-    <li><a href="#gotchas"><span class="num">19</span>Gotchas</a></li>
+    <li><a href="#windows"><span class="num">18</span>Windows</a></li>
+    <li><a href="#workflows"><span class="num">19</span>Workflows</a></li>
+    <li><a href="#gotchas"><span class="num">20</span>Gotchas &amp; bug fixes</a></li>
   </ul>
 </nav>
 
@@ -617,6 +611,11 @@ irm https://claude.ai/install.ps1 | iex
 winget install Anthropic.ClaudeCode
 winget upgrade Anthropic.ClaudeCode  <span class="c"># manual</span></code></pre>
 
+      <div class="note new">
+        <span class="label">Windows update</span>
+        Git for Windows (Git Bash) is no longer required. When absent, Claude Code now uses PowerShell as the shell tool fallback. <span class="tag windows">v2.1.116</span> See section 18 for full Windows details.
+      </div>
+
       <h4>IDE integration</h4>
       <p>VS Code and JetBrains plugins exist — launch Claude from an IDE gutter, get inline diff proposals, and keep your terminal free. See <a class="ref" href="https://code.claude.com/docs/en/vs-code" target="_blank" rel="noopener">VS Code</a> and <a class="ref" href="https://code.claude.com/docs/en/jetbrains" target="_blank" rel="noopener">JetBrains</a> docs.</p>
     </div>
@@ -633,8 +632,20 @@ claude doctor
 <span class="c"># Force reinstall if update misbehaves</span>
 claude install --force
 
-<span class="c"># Auth</span>
-claude   <span class="c"># prompts /login on first run</span></code></pre>
+<span class="c"># Auth — prompts /login on first run</span>
+claude
+
+<span class="c"># Paste OAuth code in terminal when</span>
+<span class="c"># browser callback can't reach localhost</span>
+<span class="c"># (WSL2, SSH tunnels, containers)</span>
+claude auth login</code></pre>
+
+      <h4>Project cleanup <span class="tag new">2.1.116</span></h4>
+<pre><code><span class="c"># Delete all Claude Code state for a project</span>
+claude project purge ./my-project --dry-run
+claude project purge ./my-project -y
+claude project purge ./my-project -i      <span class="c"># interactive</span>
+claude project purge --all                <span class="c"># all projects</span></code></pre>
 
       <div class="note warn">
         <span class="label">Auth notes</span>
@@ -643,7 +654,7 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
 
       <div class="note">
         <span class="label">Tip</span>
-        Run <code>claude doctor</code> after any config change — it flags unreachable permission rules, duplicate MCP servers, missing LSP binaries, and broken hooks.
+        Run <code>claude doctor</code> after any config change — it flags unreachable permission rules, duplicate MCP servers, missing LSP binaries, and broken hooks. As of <span class="tag v">2.1.118</span>, it can be opened while Claude is responding and warns when an MCP server is defined in multiple config scopes with different endpoints.
       </div>
     </div>
   </div>
@@ -674,7 +685,7 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
       <h4>Session control</h4>
       <table>
         <tr><td>-c, --continue</td><td>Resume most recent session in this dir</td></tr>
-        <tr><td>-r, --resume &lt;id&gt;</td><td>Resume a specific session id or <code>/rename</code> name</td></tr>
+        <tr><td>-r, --resume &lt;id&gt;</td><td>Resume a specific session id, name, or PR URL <span class="tag new">2.1.116</span></td></tr>
         <tr><td>--fork-session</td><td>Branch from a resumed session, preserving the original</td></tr>
         <tr><td>--from-pr &lt;#&gt;</td><td>Resume session linked to a PR</td></tr>
         <tr><td>-w, --worktree &lt;name&gt;</td><td>Run in a named git worktree</td></tr>
@@ -687,7 +698,8 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
       <h4>Model &amp; prompt</h4>
       <table>
         <tr><td>--model &lt;id&gt;</td><td>Override session model (alias or full name)</td></tr>
-        <tr><td>--effort &lt;level&gt;</td><td><code>low</code> · <code>medium</code> · <code>high</code></td></tr>
+        <tr><td>--effort &lt;level&gt;</td><td><code>low</code> · <code>medium</code> · <code>high</code> · <code>xhigh</code> <span class="tag new">2.1.111</span></td></tr>
+        <tr><td>--enable-auto-mode</td><td>No longer required for Max subscribers <span class="tag new">2.1.111</span></td></tr>
         <tr><td>--append-system-prompt</td><td>Add to default system prompt <em>(safe)</em></td></tr>
         <tr><td>--system-prompt[-file]</td><td>Replace default system prompt <em>(strict)</em></td></tr>
         <tr><td>--agents '&lt;json&gt;'</td><td>Define subagents inline via JSON</td></tr>
@@ -708,12 +720,13 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
         <tr><td>--disallowedTools "…"</td><td>Deny specific tools</td></tr>
         <tr><td>--disable-slash-commands</td><td>Kill all <code>/cmd</code></td></tr>
         <tr><td>--permission-mode &lt;m&gt;</td><td>Launch in <code>plan</code> / <code>acceptEdits</code> / <code>bypassPermissions</code></td></tr>
+        <tr><td>--dangerously-skip-<br>permissions</td><td>Bypass prompts; expanded in 2.1.116 to also bypass writes to <code>.claude/</code>, <code>.git/</code>, <code>.vscode/</code>, shell config files</td></tr>
         <tr><td>--setting-sources</td><td>Limit which settings files load</td></tr>
         <tr><td>--verbose / --debug</td><td>Debug logging + MCP handshake logs</td></tr>
       </table>
     </div>
     <div>
-      <h4>Notable flags since 2.1.98</h4>
+      <h4>Caching &amp; observability</h4>
       <table>
         <tr><td>--exclude-dynamic-<br>system-prompt-sections</td><td>Better cross-user prompt caching in print mode</td></tr>
         <tr><td>--setting-sources</td><td>Restrict loaded settings to specific sources</td></tr>
@@ -726,7 +739,7 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
 
       <div class="note">
         <span class="label">Sessions &amp; forking</span>
-        <code>--continue</code> + <code>--fork-session</code> lets you explore a risky path without destroying the original transcript. Great for "try rewriting this with X, but let me go back if it breaks."
+        <code>--continue</code> + <code>--fork-session</code> lets you explore a risky path without destroying the original transcript. As of <span class="tag v">2.1.118</span>, resume on large sessions (40MB+) is up to 67 % faster, and <code>--resume</code> accepts a PR URL directly.
       </div>
     </div>
   </div>
@@ -761,9 +774,11 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
         <tr><td><kbd>Alt</kbd>+<kbd>Enter</kbd></td><td>Newline (most terminals)</td></tr>
         <tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td><td>Newline (run <code>/terminal-setup</code> first)</td></tr>
         <tr><td><kbd>Tab</kbd></td><td>Accept suggestion / add supplementary context</td></tr>
-        <tr><td><kbd>Ctrl</kbd>+<kbd>V</kbd></td><td>Paste image</td></tr>
-        <tr><td><kbd>Ctrl</kbd>+<kbd>G</kbd></td><td>Edit prompt in external editor (<code>$EDITOR</code>)</td></tr>
-        <tr><td><kbd>Ctrl</kbd>+<kbd>U</kbd></td><td>Clear entire input buffer</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>V</kbd></td><td>Paste image (auto-downscaled if &gt;2000px <span class="tag fix">2.1.114</span>)</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>G</kbd></td><td>Edit prompt in external <code>$EDITOR</code>; can include Claude's last response as commented context <span class="tag new">2.1.111+</span></td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>U</kbd></td><td>Clear entire input buffer <span class="tag new">2.1.109</span></td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Restore cleared input <span class="tag new">2.1.109</span></td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>L</kbd></td><td>Force full terminal screen redraw <span class="tag new">2.1.109</span></td></tr>
       </table>
     </div>
     <div>
@@ -779,6 +794,7 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
         <tr><td><kbd>Ctrl</kbd>+<kbd>R</kbd></td><td>Full output / context pane</td></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>Verbose transcript toggle</td></tr>
         <tr><td><kbd>Ctrl</kbd>+<kbd>T</kbd></td><td>Toggle task list (when active)</td></tr>
+        <tr><td><kbd>f</kbd> in /plugin</td><td>Favorite the selected plugin item <span class="tag new">2.1.111+</span></td></tr>
       </table>
     </div>
   </div>
@@ -805,29 +821,33 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
     <h2>Slash commands<span class="sub">built-ins you actually reach for</span></h2>
   </div>
 
-  <p>Type <kbd>/</kbd> to open the menu; continue typing to filter. Unknown commands suggest the closest match. Full catalog in the <a class="ref" href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">commands reference</a>.</p>
+  <p>Type <kbd>/</kbd> to open the menu; continue typing to filter. Unknown commands suggest the closest match. The model can now discover built-ins like <code>/init</code>, <code>/review</code>, and <code>/security-review</code> through the Skill tool automatically — no need to type them explicitly. Full catalog in the <a class="ref" href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">commands reference</a>.</p>
 
   <h3>Daily drivers</h3>
   <table class="wide">
     <tr><td>/init</td><td>Generate <code>CLAUDE.md</code> by scanning the repo. Run first in any new project.</td></tr>
     <tr><td>/clear</td><td>Wipe conversation history (files on disk remain). Use when switching tasks.</td></tr>
     <tr><td>/compact [focus]</td><td>Compress context while keeping a focus area. Use above ~80% context.</td></tr>
-    <tr><td>/rewind · /undo</td><td>Restore to a prior checkpoint — conversation, code, or both.</td></tr>
-    <tr><td>/context</td><td>Grouped view of skills, agents, rules, and context usage by category.</td></tr>
-    <tr><td>/stats · /cost</td><td>Token usage · spend breakdown for the current session.</td></tr>
+    <tr><td>/rewind · /undo</td><td>Restore to a prior checkpoint — conversation, code, or both. <code>/undo</code> aliases <code>/rewind</code>. <span class="tag new">2.1.108</span></td></tr>
+    <tr><td>/recap</td><td>Session recap on return after time away. Configurable in <code>/config</code> or via <code>CLAUDE_CODE_ENABLE_AWAY_SUMMARY=0</code>. <span class="tag new">2.1.108</span></td></tr>
+    <tr><td>/context</td><td>Grouped view of skills, agents, rules, and context usage by category. Now works from Remote Control. <span class="tag new">2.1.111+</span></td></tr>
+    <tr><td>/stats · /cost</td><td>Token usage · spend breakdown for the current session. Per-model and cache-hit breakdown <span class="tag new">2.1.92</span>.</td></tr>
     <tr><td>/usage</td><td>Plan usage and rate-limit status.</td></tr>
     <tr><td>/model [alias]</td><td>Switch model. Warns before switching mid-conversation (re-reads history uncached).</td></tr>
-    <tr><td>/effort [level]</td><td>Adaptive reasoning tuner: <code>low</code> / <code>medium</code> / <code>high</code>.</td></tr>
+    <tr><td>/effort [level]</td><td>Adaptive reasoning tuner: <code>low</code> / <code>medium</code> / <code>high</code> / <code>xhigh</code>. With no args, opens an interactive slider. <span class="tag new">2.1.111</span></td></tr>
     <tr><td>/btw</td><td>Ask a side question without polluting main conversation context.</td></tr>
     <tr><td>/help</td><td>List everything, filtered as you type.</td></tr>
+    <tr><td>/release-notes</td><td>Interactive version picker — read any version's notes inline. <span class="tag new">2.1.92</span></td></tr>
   </table>
 
   <h3>Project &amp; code</h3>
   <table class="wide">
     <tr><td>/review</td><td>Code review of recent changes.</td></tr>
+    <tr><td>/ultrareview</td><td>Multi-agent code review in the cloud. Works on the current branch or a specific GitHub PR URL. <span class="tag new">2.1.111</span></td></tr>
     <tr><td>/security-review</td><td>Automated security audit of the diff.</td></tr>
     <tr><td>/pr_comments</td><td>Read / respond to PR review comments.</td></tr>
-    <tr><td>/team-onboarding</td><td>Generate an onboarding guide for new contributors based on the project structure and CLAUDE.md. <span class="tag new">2.1.101</span></td></tr>
+    <tr><td>/team-onboarding</td><td>Generate an onboarding guide for new contributors based on project structure and CLAUDE.md. <span class="tag new">2.1.101</span></td></tr>
+    <tr><td>/less-permission-prompts</td><td>Skill that scans transcripts for safe read-only Bash and MCP calls, then proposes a prioritized allowlist. <span class="tag new">2.1.111</span></td></tr>
     <tr><td>/add-dir [--remember]</td><td>Grant Claude access to an extra directory. <code>--remember</code> persists to settings.</td></tr>
     <tr><td>/memory</td><td>Edit <code>CLAUDE.md</code> memory files inline.</td></tr>
     <tr><td>/rename</td><td>Give the session a descriptive name (e.g. <code>oauth-migration</code>).</td></tr>
@@ -837,10 +857,10 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
   <h3>Extensions &amp; integrations</h3>
   <table class="wide">
     <tr><td>/agents</td><td>Manage subagents (project + user scope). Tabbed UI for Running / Library.</td></tr>
-    <tr><td>/skills</td><td>List installed skills. Sort by token cost with <kbd>t</kbd> in newer versions.</td></tr>
-    <tr><td>/plugin</td><td>Plugin manager UI. <code>install</code> · <code>enable</code> · <code>disable</code> · <code>uninstall</code>.</td></tr>
-    <tr><td>/reload-plugins</td><td>Pick up plugin changes without restarting.</td></tr>
-    <tr><td>/mcp</td><td>MCP server list + OAuth actions.</td></tr>
+    <tr><td>/skills</td><td>List installed skills. Sort by token cost with <kbd>t</kbd>.</td></tr>
+    <tr><td>/plugin</td><td>Plugin manager UI. <code>install</code> · <code>enable</code> · <code>disable</code> · <code>uninstall</code>. Installed tab surfaces favorites and items needing attention; press <kbd>f</kbd> to favorite. <span class="tag new">2.1.111+</span></td></tr>
+    <tr><td>/reload-plugins</td><td>Pick up plugin changes without restarting. Now works from Remote Control. <span class="tag new">2.1.111+</span></td></tr>
+    <tr><td>/mcp</td><td>MCP server list + OAuth actions. Surfaces hidden claude.ai connectors when manual servers shadow them. <span class="tag new">2.1.116</span></td></tr>
     <tr><td>/hooks</td><td>Configure event hooks.</td></tr>
     <tr><td>/permissions</td><td>Inspect / edit permission rules.</td></tr>
     <tr><td>/chrome</td><td>Drive Chrome via the Claude in Chrome extension. <span class="tag beta">BETA</span></td></tr>
@@ -848,16 +868,18 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
 
   <h3>Session &amp; environment</h3>
   <table class="wide">
-    <tr><td>/config</td><td>Settings editor (replaces <span class="tag deprecated">/output-style</span>).</td></tr>
+    <tr><td>/config</td><td>Settings editor. Search now matches option <em>values</em>, not just keys. <span class="tag new">2.1.118</span></td></tr>
+    <tr><td>/tui</td><td>Switch to flicker-free fullscreen rendering mid-conversation. Also configurable via <code>tui</code> setting. <span class="tag new">2.1.110</span></td></tr>
     <tr><td>/theme</td><td>Colors + syntax highlighting. Toggle highlight with <kbd>Ctrl</kbd>+<kbd>T</kbd>.</td></tr>
     <tr><td>/statusline</td><td>Customize terminal status line.</td></tr>
-    <tr><td>/terminal-setup</td><td>Install Shift+Enter binding (iTerm2, VS Code, Kitty, Alacritty, Zed, Warp).</td></tr>
+    <tr><td>/terminal-setup</td><td>Install Shift+Enter binding (iTerm2, VS Code, Kitty, Alacritty, Zed, Warp). Now also configures editor scroll sensitivity for fullscreen mode. <span class="tag new">2.1.118</span></td></tr>
     <tr><td>/keybindings</td><td>Edit <code>~/.claude/keybindings.json</code>.</td></tr>
     <tr><td>/vim</td><td>Vim-style modal editing in the prompt.</td></tr>
     <tr><td>/tasks</td><td>Background task manager.</td></tr>
     <tr><td>/login · /logout</td><td>Anthropic account auth.</td></tr>
     <tr><td>/bug · /feedback</td><td>Report issues to Anthropic.</td></tr>
-    <tr><td>/doctor</td><td>Diagnostics: unreachable permission rules, duplicate MCP configs, missing deps.</td></tr>
+    <tr><td>/doctor</td><td>Diagnostics: unreachable rules, duplicate MCP configs, missing deps. Can be opened while Claude is responding. <span class="tag new">2.1.118</span></td></tr>
+    <tr><td>claude project purge</td><td>CLI subcommand. Deletes all Claude Code state for a project (transcripts, tasks, file history). Flags: <code>--dry-run</code>, <code>-y</code>, <code>-i</code>, <code>--all</code>. <span class="tag new">2.1.116</span></td></tr>
   </table>
 
   <div class="note">
@@ -894,6 +916,21 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
   <h4>Rule evaluation order</h4>
   <p>Permission rules evaluate <strong>deny → ask → allow</strong>. First match wins. Use <code>Tool</code> alone or <code>Tool(specifier)</code> — for example, <code>Bash(git push:*)</code> or <code>Read(./.env*)</code>. MCP server rules use the server name: <code>mcp__github</code> (whole server) or an exact tool like <code>mcp__github__get_issue</code>. Wildcards on tool names don't exist.</p>
 
+  <h4>Auto-allowed read-only patterns <span class="tag new">2.1.111</span></h4>
+  <p>Common read-only bash patterns no longer trigger permission prompts by default:</p>
+  <ul class="plain">
+    <li>Glob expansions like <code>ls *.ts</code>, <code>ls src/**</code></li>
+    <li><code>cd &lt;project-dir&gt; &amp;&amp;</code> prefix patterns</li>
+  </ul>
+
+  <h4>/less-permission-prompts skill <span class="tag new">2.1.111</span></h4>
+  <p>Run this built-in skill to analyze your transcript history. It identifies Bash and MCP calls that are provably read-only and safe, then generates a prioritized, ready-to-paste allowlist for <code>.claude/settings.json</code>.</p>
+
+  <div class="note danger">
+    <span class="label">--dangerously-skip-permissions</span>
+    As of <span class="tag v">2.1.116</span>, this flag also bypasses prompts for writes to <code>.claude/</code>, <code>.git/</code>, <code>.vscode/</code>, and shell config files. Catastrophic removal commands (<code>rm -rf /</code> etc.) still prompt as a safety net. Only use in sandboxed / throwaway environments.
+  </div>
+
   <div class="note warn">
     <span class="label">Security</span>
     <code>PreToolUse</code> hooks returning <code>updatedInput</code> are re-checked against <code>permissions.deny</code> rules. Deny <em>always</em> wins over hook-granted permissions — a hook cannot downgrade a deny into an ask.
@@ -916,7 +953,7 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
     <h2>Models &amp; effort<span class="sub">pick the right brain for the task</span></h2>
   </div>
 
-  <p>Claude Code resolves aliases per-provider. On the Anthropic API, <code>opus</code> → Opus 4.7 and <code>sonnet</code> → Sonnet 4.6. On Bedrock / Vertex / Foundry, <code>opus</code> → Opus 4.6 and <code>sonnet</code> → Sonnet 4.5 (newer models available by explicit name or pinning env var). Always pin versions in production.</p>
+  <p>Claude Code resolves aliases per-provider. On the Anthropic API, <code>opus</code> → Opus 4.7 and <code>sonnet</code> → Sonnet 4.6. On Bedrock / Vertex / Foundry, <code>opus</code> → Opus 4.6 and <code>sonnet</code> → Sonnet 4.5. Always pin versions in production.</p>
 
   <h3>Current model aliases</h3>
   <table class="wide">
@@ -926,6 +963,11 @@ claude   <span class="c"># prompts /login on first run</span></code></pre>
     <tr><td>haiku</td><td>claude-haiku-4-5</td><td>claude-haiku-4-5</td><td>Mechanical edits, routing, high-volume tasks</td></tr>
     <tr><td>opusplan</td><td colspan="2" style="color:var(--text-dim)">hybrid</td><td>Opus for planning, Sonnet for execution</td></tr>
   </table>
+
+  <div class="note new">
+    <span class="label">Opus 4.7 + xhigh</span>
+    Claude Opus 4.7 ships with a new <code>xhigh</code> effort tier sitting between <code>high</code> and <code>max</code>. Other models fall back to <code>high</code>. Max subscribers can use Opus 4.7 in auto mode without <code>--enable-auto-mode</code>. <span class="tag v">2.1.111</span>
+  </div>
 
   <div class="note">
     <span class="label">Default</span>
@@ -950,11 +992,29 @@ claude --model claude-opus-4-7
     <tr><td>low</td><td>Fast, cheap. Good for mechanical edits, routing, high-volume tasks.</td></tr>
     <tr><td>medium</td><td>Default for most tasks. Balanced reasoning and speed.</td></tr>
     <tr><td>high</td><td>Deep chain-of-thought. Use for thorny problems and architecture decisions.</td></tr>
+    <tr><td>xhigh <span class="tag new">2.1.111</span></td><td>Opus 4.7 only. Between high and max.</td></tr>
   </table>
+
+<pre><code><span class="c"># Interactive slider (no args, 2.1.111)</span>
+/effort
+
+<span class="c"># Direct via CLI</span>
+--effort xhigh
+
+<span class="c"># In-session</span>
+/effort high
+/effort xhigh</code></pre>
+
+  <p>Custom skills and commands can reference <code>${CLAUDE_EFFORT}</code> in their prompts to adapt behavior to the current effort level. <span class="tag new">2.1.116</span></p>
 
   <div class="note warn">
     <span class="label">Cost gotcha</span>
     Switching model mid-conversation re-reads the entire history without prompt-cache benefit — expensive on long sessions. Claude warns you first. Plan to switch at natural breaks (after <code>/clear</code> or <code>/compact</code>).
+  </div>
+
+  <div class="note good">
+    <span class="label">Recently fixed</span>
+    <span class="tag v">2.1.118</span> fixed inflated <code>/context</code> percentages on Opus 4.7 — Claude Code now correctly computes against Opus 4.7's native 1M context window instead of 200K. <span class="tag v">2.1.112</span> fixed the "claude-opus-4-7 is temporarily unavailable" error blocking auto mode.
   </div>
 
   <div class="docs-links">
@@ -1002,7 +1062,7 @@ claude --model claude-opus-4-7
 
   <h4>Example skeleton</h4>
 <pre><code># BrandName — project management SaaS
-  
+
 Stack: Next.js 15 · TypeScript · Drizzle + Postgres · Tailwind.
 Package manager: <span class="s">pnpm</span>. Node 20.
 
@@ -1087,6 +1147,18 @@ allowed-tools: Read, Grep, Glob
 - Errors: return <span class="s">{ error: { code, message } }</span>, HTTP code matches.
 - Server components fetch via typed client in <span class="s">lib/api/</span>.</code></pre>
 
+  <h3>Effort-aware skills <span class="tag new">2.1.116</span></h3>
+<pre><code><span class="c">// .claude/commands/smart-review.md</span>
+---
+description: Review with effort-aware depth
+---
+Current effort level: <span class="n">${CLAUDE_EFFORT}</span>
+Review this code accordingly:
+- low: focus on obvious bugs only
+- high/xhigh: deep security, performance, and architecture review
+
+@$ARGUMENTS</code></pre>
+
   <div class="grid-2">
     <div>
       <h4>Argument patterns</h4>
@@ -1095,6 +1167,7 @@ allowed-tools: Read, Grep, Glob
         <li><code>$1</code>, <code>$2</code>, <code>$3</code> — positional</li>
         <li><code>!`cmd`</code> — run shell command, inject output</li>
         <li><code>@path/to/file</code> — inline file contents</li>
+        <li><code>${CLAUDE_EFFORT}</code> — current effort level <span class="tag new">2.1.116</span></li>
       </ul>
     </div>
     <div>
@@ -1169,6 +1242,7 @@ You are a senior reviewer. When invoked:
         <tr><td>model / effort</td><td>Override per-agent</td></tr>
         <tr><td>background</td><td>Run concurrently vs. blocking</td></tr>
         <tr><td>isolation: worktree</td><td>Run inside a fresh git worktree</td></tr>
+        <tr><td>worktree.path</td><td>Switch into existing worktree by path <span class="tag new">2.1.105</span></td></tr>
         <tr><td>memory</td><td>Persistent agent-scoped dir</td></tr>
       </table>
     </div>
@@ -1203,21 +1277,30 @@ You are a senior reviewer. When invoked:
 
   <p>Hooks fall into three cadences: <strong>once per session</strong> (SessionStart, SessionEnd), <strong>once per turn</strong> (UserPromptSubmit, Stop, StopFailure), <strong>every tool call</strong> (PreToolUse, PostToolUse). They can be shell commands, HTTP endpoints, or prompts. See the <a class="ref" href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">full event schema reference</a>.</p>
 
+  <h3>Hook events</h3>
   <table>
     <tr><th>Event</th><th>Fires when</th></tr>
     <tr><td>SessionStart</td><td>Claude Code starts or resumes</td></tr>
     <tr><td>UserPromptSubmit</td><td>You submit a prompt, before Claude sees it. Stdout adds to context.</td></tr>
     <tr><td>PreToolUse</td><td>Before a tool call. Can block (exit 2) or mutate input.</td></tr>
     <tr><td>PostToolUse</td><td>After a tool call completes</td></tr>
-    <tr><td>PreCompact</td><td>Before <code>/compact</code>. Can block with exit 2.</td></tr>
+    <tr><td>PreCompact</td><td>Before <code>/compact</code>. Can block with exit 2 or JSON. <span class="tag new">2.1.105</span></td></tr>
+    <tr><td>PostCompact</td><td>After compaction completes</td></tr>
     <tr><td>SubagentStop</td><td>Subagent finished. Gets <code>$AGENT_ID</code> + transcript path.</td></tr>
     <tr><td>Stop</td><td>Claude finishes responding</td></tr>
+    <tr><td>StopFailure</td><td>Claude fails to respond</td></tr>
     <tr><td>SessionEnd</td><td>Session closes</td></tr>
     <tr><td>Notification</td><td>Claude fires a notification</td></tr>
     <tr><td>Setup</td><td>Repo setup / maintenance ops</td></tr>
+    <tr><td>CwdChanged</td><td>Working directory changes</td></tr>
+    <tr><td>FileChanged</td><td>A tracked file changes (enables direnv-style setups)</td></tr>
+    <tr><td>TaskCreated</td><td>A new background task is created via TaskCreate</td></tr>
+    <tr><td>ConfigChange</td><td>A configuration file changes during the session</td></tr>
+    <tr><td>Elicitation / ElicitationResult</td><td>MCP server requests structured input mid-task</td></tr>
+    <tr><td>TeammateIdle / TaskCompleted</td><td>Multi-agent teammate events</td></tr>
   </table>
 
-  <h4>Format &amp; wiring</h4>
+  <h3>Format &amp; wiring</h3>
 <pre><code><span class="c">// .claude/settings.json</span>
 {
   "hooks": {
@@ -1241,6 +1324,13 @@ You are a senior reviewer. When invoked:
   }
 }</code></pre>
 
+  <h3>PreCompact blocking <span class="tag new">2.1.105</span></h3>
+<pre><code><span class="c"># Option 1: exit code 2 from the hook command</span>
+exit 2
+
+<span class="c"># Option 2: return structured JSON</span>
+echo '{"decision":"block","reason":"Not safe to compact now"}'</code></pre>
+
   <div class="grid-2">
     <div>
       <h4>Exit codes</h4>
@@ -1261,6 +1351,19 @@ You are a senior reviewer. When invoked:
       </ul>
     </div>
   </div>
+
+  <h3>Plugin background monitors <span class="tag new">2.1.105</span></h3>
+  <p>Plugins can declare background monitors under a new <code>monitors</code> manifest key. These run independently in the background and stream events to the main agent via the Monitor tool.</p>
+<pre><code><span class="c">// plugin.json</span>
+{
+  "name": "my-plugin",
+  "monitors": [
+    {
+      "name": "file-watcher",
+      "command": "node monitors/watch-files.js"
+    }
+  ]
+}</code></pre>
 
   <div class="docs-links">
     <div class="docs-links-label">Read deeper</div>
@@ -1295,6 +1398,11 @@ You are a senior reviewer. When invoked:
   <h3>Tool Search — why 2.1.x MCP scales</h3>
   <p>When MCP tool descriptions would consume more than 10 % of context, Claude Code loads them dynamically instead of preloading. Set <code>ENABLE_TOOL_SEARCH=true</code> to force it on. Expect ~85 % token reduction on heavy setups and better tool-selection accuracy on Opus.</p>
 
+  <div class="note new">
+    <span class="label">Faster startup</span>
+    <span class="tag v">2.1.118</span> — When multiple stdio MCP servers are configured, startup is now significantly faster. <code>resources/templates/list</code> is deferred until the first <code>@</code>-mention rather than called eagerly at startup for every server.
+  </div>
+
   <div class="note">
     <span class="label">HTTP transport</span>
     For Context7, the right pattern is HTTP transport at <code>https://mcp.context7.com/mcp</code>, with the API key in <code>env.CONTEXT7_API_KEY</code> using the <code>ctx7sk_</code> prefix. Full quit-and-relaunch of Claude Desktop is required after config changes.
@@ -1314,7 +1422,11 @@ You are a senior reviewer. When invoked:
     <tr><td>Cloudflare</td><td><code>claude mcp add --transport http cloudflare https://mcp.cloudflare.com/mcp</code></td></tr>
   </table>
 
-  <p>MCP-exposed prompts appear as <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code>. Example: <code>/mcp__github__list_prs</code>.</p>
+  <p>MCP-exposed prompts appear as <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code>. Example: <code>/mcp__github__list_prs</code>. As of <span class="tag v">2.1.116</span>, <code>/mcp</code> surfaces claude.ai connectors hidden by manually-added servers with the same URL, with a hint to remove the duplicate.</p>
+
+  <h3>Bedrock service tier <span class="tag new">2.1.116</span></h3>
+<pre><code><span class="c"># Selects Bedrock service tier (sent as X-Amzn-Bedrock-Service-Tier header)</span>
+<span class="v">ANTHROPIC_BEDROCK_SERVICE_TIER</span>=priority claude   <span class="c"># default | flex | priority</span></code></pre>
 
   <h3>Enterprise policy</h3>
 <pre><code><span class="c">// /etc/claude-code/managed-mcp.json (excerpt)</span>
@@ -1328,6 +1440,11 @@ You are a senior reviewer. When invoked:
   ]
 }</code></pre>
   <p>Denylist takes absolute precedence over allowlist.</p>
+
+  <div class="note good">
+    <span class="label">API stream stability <span class="tag v">2.1.105</span></span>
+    Stalled API streams now abort after 5 minutes of silence and automatically retry with non-streaming fallback. Prevents silent hangs on long-running agentic tasks.
+  </div>
 
   <div class="docs-links">
     <div class="docs-links-label">Read deeper</div>
@@ -1349,11 +1466,11 @@ You are a senior reviewer. When invoked:
   <p>A plugin is a self-contained directory — the unit of sharing for Claude Code extensions. Install scopes: <code>user</code> (personal), <code>project</code> (checked into git, shared with team), <code>local</code> (project-local, gitignored).</p>
 
   <table class="wide">
-    <tr><td>/plugin</td><td>Open plugin manager UI</td></tr>
+    <tr><td>/plugin</td><td>Open plugin manager UI. Installed tab surfaces favorites and items needing attention; press <kbd>f</kbd> to favorite. <span class="tag new">2.1.111+</span></td></tr>
     <tr><td>/plugin marketplace add &lt;url|path&gt;</td><td>Register a marketplace (GitHub org, local dir)</td></tr>
     <tr><td>/plugin install &lt;name&gt;@&lt;marketplace&gt;</td><td>Install</td></tr>
     <tr><td>/plugin enable|disable|uninstall &lt;name&gt;@&lt;mkt&gt;</td><td>Lifecycle</td></tr>
-    <tr><td>/reload-plugins</td><td>Pick up plugin changes without restart</td></tr>
+    <tr><td>/reload-plugins</td><td>Pick up plugin changes without restart. Now works from Remote Control.</td></tr>
     <tr><td>claude plugin update</td><td>Pull latest marketplace versions</td></tr>
     <tr><td>claude plugin install &lt;n&gt;@&lt;m&gt; --scope project</td><td>Install to project (shared with team)</td></tr>
     <tr><td>claude --plugin-dir &lt;path&gt;</td><td>Dev-mode: load a local plugin for the session only</td></tr>
@@ -1367,7 +1484,7 @@ You are a senior reviewer. When invoked:
 ├── commands/              <span class="c"># flat .md slash commands</span>
 ├── agents/                <span class="c"># subagents</span>
 ├── hooks/                 <span class="c"># hook configs</span>
-├── monitors/              <span class="c"># background monitors</span>
+├── monitors/              <span class="c"># background monitors (2.1.105)</span>
 ├── .mcp.json              <span class="c"># MCP servers</span>
 ├── .lsp.json              <span class="c"># LSP servers</span>
 └── scripts/</code></pre>
@@ -1404,10 +1521,18 @@ You are a senior reviewer. When invoked:
     <tr><td>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1</td><td>Disable entirely</td></tr>
   </table>
 
+  <div class="note new">
+    <span class="label">Scheduled tasks <span class="tag v">2.1.110</span></span>
+    Scheduled tasks now survive <code>--resume</code> and <code>--continue</code> — they are automatically resurrected on session reload. Previously they would be silently dropped.
+  </div>
+
   <div class="note">
     <span class="label">Monitor tool</span>
-    The Monitor tool streams events from background scripts — a debugging lifesaver when a long-running subagent misbehaves.
+    The Monitor tool streams events from background scripts — a debugging lifesaver when a long-running subagent misbehaves. Plugins can declare background monitors via the <code>monitors</code> manifest key (see Hooks).
   </div>
+
+  <h3>Mobile push notifications <span class="tag new">2.1.110</span></h3>
+  <p>Claude can now send push notifications to your phone when Remote Control is enabled and "Push when Claude decides" is configured. Lets you step away from the terminal and return when Claude needs input.</p>
 
   <h3>Git worktrees</h3>
   <p>Run parallel sessions on the same repo without <code>git stash</code> dances. Each worktree keeps its own Claude session with full context. Great for <em>"feature branch + urgent hotfix + model comparison"</em> scenarios.</p>
@@ -1423,7 +1548,7 @@ cd ../app-hotfix &amp;&amp; claude        <span class="c"># terminal 2</span>
 claude -w feature/auth
 claude --worktree hotfix/crit</code></pre>
 
-  <p>The status line JSON input includes <code>workspace.git_worktree</code>, set whenever cwd is inside a linked worktree — handy for custom statuslines. Subagents with <code>isolation: worktree</code> run in a fresh worktree automatically.</p>
+  <p>The status line JSON input includes <code>workspace.git_worktree</code>, set whenever cwd is inside a linked worktree — handy for custom statuslines. Subagents with <code>isolation: worktree</code> run in a fresh worktree automatically. As of <span class="tag v">2.1.105</span>, the <code>EnterWorktree</code> tool accepts a <code>path</code> parameter to switch into <em>existing</em> worktrees.</p>
 
   <div class="docs-links">
     <div class="docs-links-label">Read deeper</div>
@@ -1462,10 +1587,22 @@ gh pr diff 123 | claude -p \
 <span class="c"># Multi-turn via session id</span>
 sid=$(claude -p "start analysis" --output-format json | jq -r .session_id)
 claude --resume "$sid" -p "now check test coverage"
-claude --resume "$sid" -p "summarize findings"</code></pre>
+claude --resume "$sid" -p "summarize findings"
+
+<span class="c"># Resume by PR URL (2.1.116)</span>
+claude --resume https://github.com/owner/repo/pull/123</code></pre>
+
+  <h3>Resume performance <span class="tag perf">2.1.118</span></h3>
+  <p><code>/resume</code> and <code>--resume</code> on large sessions are now significantly faster — up to <strong>67 %</strong> faster on sessions over 40 MB — and handle sessions with many dead-fork entries more efficiently.</p>
 
   <h3>Caching for CI</h3>
   <p><code>--exclude-dynamic-system-prompt-sections</code> trims out per-user sections from print mode so cross-user prompt caching actually hits. Worth using on any shared CI job where many runs share a static system prompt.</p>
+
+<pre><code><span class="c"># Opt into 1-hour prompt cache TTL (API key, Bedrock, Vertex, Foundry)</span>
+<span class="v">ENABLE_PROMPT_CACHING_1H</span>=1 claude
+
+<span class="c"># Force the 5-minute shorter TTL</span>
+<span class="v">FORCE_PROMPT_CACHING_5M</span>=1 claude</code></pre>
 
   <h3>Agent SDK</h3>
 <pre><code><span class="c">// TypeScript — @anthropic-ai/claude-agent-sdk</span>
@@ -1481,7 +1618,7 @@ for await (const msg of query({
 
   <div class="note">
     <span class="label">Tracing</span>
-    Headless/SDK sessions read <code>TRACEPARENT</code> / <code>TRACESTATE</code> from the environment, so Claude Code runs slot into your existing distributed trace tree. Use with <code>OTEL_LOG_TOOL_DETAILS</code> / <code>OTEL_LOG_TOOL_CONTENT</code> for full observability.
+    Headless/SDK sessions read <code>TRACEPARENT</code> / <code>TRACESTATE</code> from the environment, so Claude Code runs slot into your existing distributed trace tree. Use with <code>OTEL_LOG_TOOL_DETAILS</code> / <code>OTEL_LOG_TOOL_CONTENT</code> for full observability. As of <span class="tag v">2.1.109</span>, <code>OTEL_LOG_RAW_API_BODIES</code> emits full request/response bodies as OTEL log events.
   </div>
 
   <div class="docs-links">
@@ -1524,7 +1661,9 @@ for await (const msg of query({
       "Bash(git status)",
       "Bash(git diff)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      <span class="n">"Bash(ls *)",</span>           <span class="c">// auto-allowed in 2.1.111</span>
+      <span class="n">"Bash(cat *)"</span>
     ],
     "ask": [
       "Bash(git push:*)",
@@ -1561,6 +1700,11 @@ for await (const msg of query({
     <code>claude doctor</code> warns about unreachable permission rules (e.g. a <code>deny</code> shadowed by an earlier <code>allow</code>). Run it after editing settings.
   </div>
 
+  <div class="note good">
+    <span class="label">Fixed in 2.1.114</span>
+    <code>allowManagedDomainsOnly</code> / <code>allowManagedReadPathsOnly</code> were being ignored when a higher-priority managed-settings source lacked a <code>sandbox</code> block. Now correctly enforced.
+  </div>
+
   <div class="docs-links">
     <div class="docs-links-label">Read deeper</div>
     <ul>
@@ -1581,6 +1725,7 @@ for await (const msg of query({
 
   <p>Any env var can also be set under <code>env</code> in <code>settings.json</code> to apply it to every session. Full list in the <a class="ref" href="https://code.claude.com/docs/en/environment-variables" target="_blank" rel="noopener">environment variables reference</a>.</p>
 
+  <h3>Models &amp; auth</h3>
   <table class="wide">
     <tr><th>Variable</th><th>Effect</th></tr>
     <tr><td>ANTHROPIC_MODEL</td><td>Default model for new sessions</td></tr>
@@ -1589,26 +1734,52 @@ for await (const msg of query({
     <tr><td>ANTHROPIC_DEFAULT_HAIKU_MODEL</td><td>Pin Haiku alias</td></tr>
     <tr><td>ANTHROPIC_AUTH_TOKEN</td><td>Custom auth header (proxies)</td></tr>
     <tr><td>ANTHROPIC_CUSTOM_HEADERS</td><td>Extra HTTP headers</td></tr>
+    <tr><td>ANTHROPIC_BEDROCK_SERVICE_TIER</td><td>Bedrock service tier: <code>default</code> · <code>flex</code> · <code>priority</code> <span class="tag new">2.1.116</span></td></tr>
     <tr><td>API_TIMEOUT_MS</td><td>Per-request API timeout</td></tr>
+  </table>
+
+  <h3>Tools, skills, sessions</h3>
+  <table class="wide">
     <tr><td>ENABLE_LSP_TOOL=1</td><td>Turn on Language Server Protocol integration</td></tr>
     <tr><td>ENABLE_TOOL_SEARCH=true</td><td>Force dynamic MCP tool loading</td></tr>
     <tr><td>SLASH_COMMAND_TOOL_CHAR_BUDGET</td><td>Raise the skill-description budget</td></tr>
+    <tr><td>CLAUDE_CODE_ENABLE_AWAY_SUMMARY</td><td>Set to <code>0</code> to opt out of session recap. <span class="tag new">2.1.110</span></td></tr>
     <tr><td>CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1</td><td>Disable background agents</td></tr>
-    <tr><td>CLAUDE_CODE_PERFORCE_MODE <span class="tag">2.1.98</span></td><td>Fail on read-only edits with a <code>p4 edit</code> hint instead of overwriting</td></tr>
-    <tr><td>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB <span class="tag">2.1.98</span></td><td>Scrub subprocess env + enable PID namespace isolation (Linux)</td></tr>
-    <tr><td>CLAUDE_CODE_SCRIPT_CAPS <span class="tag">2.1.98</span></td><td>Cap per-session script invocations</td></tr>
+    <tr><td>CLAUDE_CODE_USE_POWERSHELL_TOOL</td><td>Enables the PowerShell tool on Windows. <span class="tag new">2.1.111</span></td></tr>
+    <tr><td>AI_AGENT</td><td>Set for GitHub attribution — marks Claude Code's automated commits and PRs appropriately. <span class="tag new">2.1.116</span></td></tr>
+  </table>
+
+  <h3>Caching &amp; observability</h3>
+  <table class="wide">
+    <tr><td>ENABLE_PROMPT_CACHING_1H</td><td>Opt into 1-hour prompt cache TTL on API key, Bedrock, Vertex, Foundry. <span class="tag new">2.1.108</span></td></tr>
+    <tr><td>FORCE_PROMPT_CACHING_5M</td><td>Force 5-minute prompt cache TTL. <span class="tag new">2.1.108</span></td></tr>
+    <tr><td>DISABLE_PROMPT_CACHING</td><td>Kill prompt caching (warns at startup)</td></tr>
+    <tr><td>DISABLE_TELEMETRY</td><td>Disable usage telemetry</td></tr>
+    <tr><td>OTEL_LOG_USER_PROMPTS</td><td>Opt-in: include user prompts in OTEL spans</td></tr>
+    <tr><td>OTEL_LOG_TOOL_DETAILS / _CONTENT</td><td>Opt-in: tool-call detail in traces</td></tr>
+    <tr><td>OTEL_LOG_RAW_API_BODIES</td><td>Emit full API request/response bodies as OTEL log events. <span class="tag new">2.1.109</span></td></tr>
+    <tr><td>TRACEPARENT / TRACESTATE</td><td>W3C distributed tracing for Bash subprocesses + SDK</td></tr>
+  </table>
+
+  <h3>Security &amp; sandboxing</h3>
+  <table class="wide">
+    <tr><td>CLAUDE_CODE_PERFORCE_MODE</td><td>Fail on read-only edits with a <code>p4 edit</code> hint instead of overwriting</td></tr>
+    <tr><td>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB</td><td>Scrub subprocess env + enable PID namespace isolation (Linux)</td></tr>
+    <tr><td>CLAUDE_CODE_SCRIPT_CAPS</td><td>Cap per-session script invocations</td></tr>
     <tr><td>CLAUDE_CODE_CERT_STORE</td><td><code>bundled</code> to use bundled CA store instead of OS trust store</td></tr>
+  </table>
+
+  <h3>Filesystem &amp; environment</h3>
+  <table class="wide">
     <tr><td>CLAUDE_ENV_FILE</td><td>Extra env file to source (e.g. <code>~/.zprofile</code>)</td></tr>
     <tr><td>CLAUDE_CODE_TMPDIR</td><td>Override temp dir</td></tr>
     <tr><td>CLAUDE_CODE_GIT_BASH_PATH</td><td>Windows: path to git-bash</td></tr>
     <tr><td>CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1</td><td>Disable <code>cd</code> carry-over across Bash calls</td></tr>
-    <tr><td>ENABLE_PROMPT_CACHING_1H</td><td>Opt into 1-hour prompt cache TTL</td></tr>
-    <tr><td>FORCE_PROMPT_CACHING_5M</td><td>Force 5-minute TTL</td></tr>
-    <tr><td>DISABLE_TELEMETRY</td><td>Disable usage telemetry</td></tr>
-    <tr><td>DISABLE_PROMPT_CACHING</td><td>Kill prompt caching (warns at startup)</td></tr>
-    <tr><td>OTEL_LOG_USER_PROMPTS</td><td>Opt-in: include user prompts in OTEL spans</td></tr>
-    <tr><td>OTEL_LOG_TOOL_DETAILS / _CONTENT</td><td>Opt-in: tool-call detail in traces</td></tr>
-    <tr><td>TRACEPARENT / TRACESTATE <span class="tag">2.1.98</span></td><td>W3C distributed tracing for Bash subprocesses + SDK</td></tr>
+  </table>
+
+  <h3>Skill-accessible variables</h3>
+  <table class="wide">
+    <tr><td>${CLAUDE_EFFORT}</td><td>Custom skills/commands can reference this in prompts to adapt behavior to the current effort level. <span class="tag new">2.1.116</span></td></tr>
   </table>
 
   <div class="docs-links">
@@ -1620,10 +1791,60 @@ for await (const msg of query({
   </div>
 </section>
 
-<!-- ============ 18 WORKFLOWS ============ -->
-<section id="workflows">
+<!-- ============ 18 WINDOWS ============ -->
+<section id="windows">
   <div class="section-head">
     <div class="section-num">18</div>
+    <h2>Windows<span class="sub">Git Bash optional · PowerShell tool · platform parity</span></h2>
+  </div>
+
+  <p class="lede">Windows support saw the most significant architectural change in this release line: Git for Windows (Git Bash) is no longer a hard requirement. Claude Code now falls back to PowerShell automatically.</p>
+
+  <h3>Git Bash no longer required <span class="tag windows">2.1.116</span></h3>
+  <p>When Git Bash is absent, Claude Code uses PowerShell as the shell tool fallback. PowerShell 7 via Microsoft Store, MSI, or .NET global tool is all detected.</p>
+
+<pre><code><span class="c"># No Git Bash? Claude Code uses PowerShell instead</span>
+
+<span class="c"># Opt-in to the PowerShell tool explicitly</span>
+<span class="v">CLAUDE_CODE_USE_POWERSHELL_TOOL</span>=1 claude</code></pre>
+
+  <h3>PowerShell tool fixes</h3>
+  <table class="wide">
+    <tr>
+      <td>Bare <code>--</code> flag parsing <span class="tag fix">2.1.117</span></td>
+      <td>Fixed <code>git diff -- file</code> patterns being mis-flagged as the <code>--%</code> stop-parsing token in PowerShell.</td>
+    </tr>
+    <tr>
+      <td>CRLF doubling <span class="tag fix">2.1.107</span></td>
+      <td>Fixed Edit/Write tools doubling CRLF on Windows and stripping Markdown hard line breaks (two trailing spaces).</td>
+    </tr>
+  </table>
+
+  <h3>Voice mode &amp; clipboard</h3>
+  <table class="wide">
+    <tr>
+      <td>Voice mode <span class="tag fix">2.1.107</span></td>
+      <td>Fixed voice mode failing with "WebSocket upgrade rejected with HTTP 101". Also fixed voice push-to-talk not activating for some modifier-combo bindings.</td>
+    </tr>
+    <tr>
+      <td>Clipboard privacy <span class="tag security">2.1.117</span></td>
+      <td>Clipboard writes no longer expose copied content in process command-line arguments visible to EDR/SIEM telemetry. Also fixes &gt;22 KB selections not reaching the clipboard.</td>
+    </tr>
+  </table>
+
+  <div class="docs-links">
+    <div class="docs-links-label">Read deeper</div>
+    <ul>
+      <li><a class="ref" href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Administration &amp; setup</a></li>
+      <li><a class="ref" href="https://code.claude.com/docs/en/troubleshooting" target="_blank" rel="noopener">Troubleshooting</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 19 WORKFLOWS ============ -->
+<section id="workflows">
+  <div class="section-head">
+    <div class="section-num">19</div>
     <h2>Workflows that pay rent<span class="sub">battle-tested patterns, not theoretical ones</span></h2>
   </div>
 
@@ -1635,7 +1856,8 @@ claude
 &gt; /init
 &gt; <span class="c"># review the generated CLAUDE.md, trim aggressively</span>
 &gt; /memory   <span class="c"># add commands, conventions, "do not touch" zones</span>
-&gt; /permissions   <span class="c"># lock down .env and secrets</span></code></pre>
+&gt; /permissions   <span class="c"># lock down .env and secrets</span>
+&gt; /less-permission-prompts   <span class="c"># auto-build a safe allowlist (2.1.111)</span></code></pre>
 
   <h3>2. Plan → execute with opusplan</h3>
 <pre><code>claude --model opusplan
@@ -1643,12 +1865,17 @@ claude
 &gt; Plan a migration from REST to GraphQL for the user service.
 &gt; <span class="c"># exit plan → Claude switches to Sonnet for execution</span></code></pre>
 
-  <h3>3. Safe parallel work</h3>
+  <h3>3. Deep-reasoning with Opus 4.7 + xhigh</h3>
+<pre><code>claude --model opus --effort xhigh
+&gt; <span class="c"># Reserve for thorny architecture decisions</span>
+&gt; <span class="c"># where you'd otherwise reach for "max"</span></code></pre>
+
+  <h3>4. Safe parallel work</h3>
 <pre><code>git worktree add ../app-hotfix -b hotfix/login-500 main
 cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
 <span class="c"># main project keeps running in the other terminal, full context</span></code></pre>
 
-  <h3>4. Automated PR review in CI</h3>
+  <h3>5. Automated PR review in CI</h3>
 <pre><code><span class="c"># .github/workflows/review.yml (excerpt)</span>
 - run: |
     gh pr diff ${{ github.event.number }} | \
@@ -1659,7 +1886,11 @@ cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
         --exclude-dynamic-system-prompt-sections \
       &gt; review.json</code></pre>
 
-  <h3>5. Auto-format on write</h3>
+  <h3>6. Cloud multi-agent review</h3>
+<pre><code><span class="c"># In-session, against current branch or a PR URL</span>
+/ultrareview https://github.com/owner/repo/pull/123</code></pre>
+
+  <h3>7. Auto-format on write</h3>
 <pre><code><span class="c">// .claude/settings.json</span>
 {
   "hooks": {
@@ -1673,14 +1904,19 @@ cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
   }
 }</code></pre>
 
-  <h3>6. Cost discipline</h3>
+  <h3>8. Resume long-running session by PR <span class="tag new">2.1.116</span></h3>
+<pre><code><span class="c"># Paste a PR URL into the /resume search box, or use --resume directly</span>
+claude --resume https://github.com/owner/repo/pull/123</code></pre>
+
+  <h3>9. Cost discipline</h3>
   <ul class="plain">
     <li>Start on Sonnet; <code>/model opus</code> only when it's stuck.</li>
     <li><code>/compact</code> at ~80 % context — cheaper than letting it auto-compact under pressure.</li>
     <li><code>/clear</code> between unrelated tasks. Don't pay to carry old context.</li>
     <li>Frequent custom commands: pin <code>model: claude-haiku-4-5</code> in frontmatter.</li>
-    <li><code>/effort low</code> for mechanical work; save <code>high</code> for hard reasoning.</li>
+    <li><code>/effort low</code> for mechanical work; save <code>high</code> / <code>xhigh</code> for hard reasoning.</li>
     <li><code>/btw</code> for side questions — answers in a dismissible overlay, never enter history.</li>
+    <li>Use <code>ENABLE_PROMPT_CACHING_1H</code> for long-running agentic pipelines.</li>
   </ul>
 
   <div class="docs-links">
@@ -1693,13 +1929,14 @@ cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
   </div>
 </section>
 
-<!-- ============ 19 GOTCHAS ============ -->
+<!-- ============ 20 GOTCHAS & BUG FIXES ============ -->
 <section id="gotchas">
   <div class="section-head">
-    <div class="section-num">19</div>
-    <h2>Gotchas &amp; limits<span class="sub">the things nobody tells you until you hit them</span></h2>
+    <div class="section-num">20</div>
+    <h2>Gotchas &amp; bug fixes<span class="sub">the things nobody tells you until you hit them</span></h2>
   </div>
 
+  <h3>Persistent gotchas</h3>
   <ul class="plain">
     <li><strong>Checkpoints ≠ git.</strong> <code>/rewind</code> restores tracked edits only. Changes made by <code>rm</code>, <code>mv</code>, <code>cp</code>, or external editors are <em>not</em> recoverable. Commit often.</li>
     <li><strong>Permission wildcards don't exist for tool names.</strong> <code>mcp__github__*</code> matches nothing. Use the server name alone or list tools explicitly.</li>
@@ -1717,6 +1954,55 @@ cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
     <li><strong>OS CA store is trusted by default.</strong> Use <code>CLAUDE_CODE_CERT_STORE=bundled</code> only if you need to skip OS certificate trust (some enterprise TLS setups).</li>
   </ul>
 
+  <h3>Notable bug fixes (2.1.105 → 2.1.118)</h3>
+
+  <h4>Context &amp; models</h4>
+  <table class="wide">
+    <tr><td>Opus 4.7 context window <span class="tag fix">2.1.118</span></td><td>Fixed inflated <code>/context</code> percentages and premature autocompacting — Claude Code was computing against 200 K instead of Opus 4.7's native 1 M context.</td></tr>
+    <tr><td>Opus 4.7 auto mode <span class="tag fix">2.1.112</span></td><td>Fixed "claude-opus-4-7 is temporarily unavailable" blocking auto mode.</td></tr>
+  </table>
+
+  <h4>MCP &amp; auth</h4>
+  <table class="wide">
+    <tr><td>MCP Esc key regression <span class="tag fix">2.1.114</span></td><td>Pressing <kbd>Esc</kbd> during a stdio MCP tool call was closing the entire server connection (regression in 2.1.105).</td></tr>
+    <tr><td>OAuth 401 retry loop <span class="tag fix">2.1.117</span></td><td>Fixed OAuth authentication failing with a 401 retry loop when <code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1</code>.</td></tr>
+    <tr><td>Agent SDK hang <span class="tag fix">2.1.117</span></td><td>Fixed Agent SDK hanging when the model emits a malformed tool name in a parallel tool call batch.</td></tr>
+    <tr><td>Credential save crash <span class="tag fix">2.1.113</span></td><td>Fixed crash on Linux/Windows corrupting <code>~/.claude/.credentials.json</code>.</td></tr>
+    <tr><td>/login with OAuth env <span class="tag fix">2.1.113</span></td><td>Fixed <code>/login</code> having no effect when launched with <code>CLAUDE_CODE_OAUTH_TOKEN</code> — env token is now cleared so disk credentials take effect.</td></tr>
+  </table>
+
+  <h4>Terminal &amp; session</h4>
+  <table class="wide">
+    <tr><td>Keyboard freeze on /resume <span class="tag fix">2.1.114</span></td><td>Fixed <code>/rewind</code> and other interactive overlays not responding to keyboard input after launching with <code>claude --resume</code>.</td></tr>
+    <tr><td>Terminal scrollback duplication <span class="tag fix">2.1.114</span></td><td>Fixed terminal scrollback being duplicated in non-fullscreen mode on resize, dialog dismiss, and long sessions.</td></tr>
+    <tr><td>Alt key freeze <span class="tag fix">2.1.113</span></td><td>Fixed <kbd>Alt</kbd>+<kbd>K</kbd> / <kbd>Alt</kbd>+<kbd>X</kbd> / <kbd>Alt</kbd>+<kbd>^</kbd> / <kbd>Alt</kbd>+<kbd>_</kbd> freezing keyboard input entirely.</td></tr>
+    <tr><td>Display tearing (iTerm2+tmux) <span class="tag fix">2.1.109</span></td><td>Fixed random character tearing and drifting input in iTerm2+tmux when terminal notifications are sent.</td></tr>
+    <tr><td>Remote model setting override <span class="tag fix">2.1.113</span></td><td>Fixed connecting to a remote session overwriting your local model setting in <code>~/.claude/settings.json</code>.</td></tr>
+    <tr><td>/fork performance <span class="tag fix">2.1.113</span></td><td>Fixed <code>/fork</code> writing the full parent conversation to disk per fork — now writes a pointer and hydrates on read.</td></tr>
+    <tr><td>Slash command picker jump <span class="tag fix">2.1.114</span></td><td>Fixed the slash command picker jumping while typing.</td></tr>
+  </table>
+
+  <h4>Permissions &amp; UI</h4>
+  <table class="wide">
+    <tr><td>DISABLE_TELEMETRY suppression <span class="tag fix">2.1.114</span></td><td>Fixed <code>DISABLE_TELEMETRY</code> / <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> not suppressing usage metrics telemetry for API and enterprise users.</td></tr>
+    <tr><td>False-positive rm prompts <span class="tag fix">2.1.114</span></td><td>Fixed false-positive "Dangerous rm operation" permission prompts in auto mode for multi-line bash commands containing both a pipe and a redirect.</td></tr>
+    <tr><td>Plan dialog mode label <span class="tag fix">2.1.113</span></td><td>Fixed plan acceptance dialog offering "auto mode" instead of "bypass permissions" when running with <code>--dangerously-skip-permissions</code>.</td></tr>
+    <tr><td>Fullscreen menu clipping <span class="tag fix">2.1.114</span></td><td>Fixed long selection menus clipping below the terminal in fullscreen mode.</td></tr>
+    <tr><td>Image paste size limit <span class="tag fix">2.1.114</span></td><td>Pasting an image &gt;2000 px no longer breaks the session — images are downscaled on paste, and oversized images in history are auto-removed and the request retried.</td></tr>
+  </table>
+
+  <h4>Stability &amp; memory</h4>
+  <table class="wide">
+    <tr><td>StructuredOutput cache bug <span class="tag fix">2.1.107</span></td><td>Fixed <code>StructuredOutput</code> schema cache bug causing ~50 % failure rate when using multiple schemas.</td></tr>
+    <tr><td>LRU memory leak <span class="tag fix">2.1.107</span></td><td>Fixed memory leak where large JSON inputs were retained as LRU cache keys in long-running sessions.</td></tr>
+    <tr><td>Large session file crash <span class="tag fix">2.1.107</span></td><td>Fixed a crash when removing a message from very large session files (over 50 MB).</td></tr>
+    <tr><td>LSP server zombie state <span class="tag fix">2.1.107</span></td><td>Fixed LSP server getting stuck in a zombie state after a crash — server now restarts on next request instead of failing until session restart.</td></tr>
+    <tr><td>CJK prompt history loss <span class="tag fix">2.1.107</span></td><td>Fixed prompt history entries containing CJK characters or emoji being silently dropped on a 4 KB boundary in <code>~/.claude/history.jsonl</code>.</td></tr>
+    <tr><td>/stats token undercount <span class="tag fix">2.1.107</span></td><td>Fixed <code>/stats</code> undercounting tokens by excluding subagent usage.</td></tr>
+    <tr><td>LSP stale diagnostics <span class="tag fix">2.1.109</span></td><td>Fixed stale pre-edit LSP diagnostics appearing after an edit and causing Claude to unnecessarily re-read files it just edited.</td></tr>
+    <tr><td>Agent hook mis-fires <span class="tag fix">2.1.113</span></td><td>Fixed agent-type hooks failing with "Messages are required for agent hooks" when configured for events other than Stop or SubagentStop.</td></tr>
+  </table>
+
   <div class="docs-links">
     <div class="docs-links-label">Read deeper</div>
     <ul>
@@ -1728,7 +2014,7 @@ cd ../app-hotfix &amp;&amp; claude "fix the 500 on /api/login"
 </section>
 
 <footer>
-  <div>Claude Code · v2.1.104 reference · Anthropic.</div>
+  <div>Claude Code · v2.1.118 reference · Anthropic.</div>
   <div>
     <a href="https://code.claude.com/docs">docs</a> ·
     <a href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md">changelog</a> ·
